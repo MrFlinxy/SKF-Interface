@@ -1,3 +1,7 @@
 /server_kimia_fisik/__pycache__
 /server_kimia_fisik/static/src/input.css
+/node_modules
+package.json
+package-lock.json
+tailwind.config.js
 /__pycache__
