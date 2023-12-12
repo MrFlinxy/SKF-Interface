@@ -83,7 +83,7 @@ def register():
 
 @main.route("/resetpassword", methods=["GET", "POST"])
 def resetpassword():
-    if "user" in session:
+    if "user" in session and "akun" in session:
         return redirect("home")
     if request.method == "POST":
         email_to_reset = request.form.get("email")
@@ -94,42 +94,80 @@ def resetpassword():
 
 @main.route("/home", methods=["GET"])
 def home():
-    return render_template("home.html")
+    if "user" in session and "akun" in session:
+        return render_template("home.html")
+    else:
+        return redirect("login")
 
 
 @main.route("/submit/<software>", methods=["GET", "POST"])
 def submit(software):
-    return redirect("login")
+    if "user" in session and "akun" in session:
+        if request.method == "GET" and software == "menu":
+            return render_template("submit_software.html")
+
+        if request.method == "GET" and software == "ORCA":
+            return render_template("submit_ORCA.html")
+        if request.method == "POST" and software == "ORCA":
+            return redirect("submit/ORCA")
+
+        if request.method == "GET" and software == "Gaussian":
+            return render_template("submit_Gaussian.html")
+        if request.method == "POST" and software == "Gaussian":
+            return redirect("submit/Gaussian")
+    else:
+        return redirect("login")
 
 
 @main.route("/jsme/<software>", methods=["POST"])
 def jsme(software):
-    return redirect("auth")
+    if "user" in session and "akun" in session:
+        if request.method == "POST" and software == "ORCA":
+            return render_template("submit_ORCA.html")
+        if request.method == "POST" and software == "Gaussian":
+            return render_template("submit_Gaussian.html")
+    else:
+        return redirect("login")
 
 
 @main.route("/queue")
 def queue():
-    return redirect("login")
+    if "user" in session and "akun" in session:
+        return render_template("queue.html")
+    else:
+        return redirect("login")
 
 
 @main.route("/result")
 def result():
-    return redirect("login")
+    if "user" in session and "akun" in session:
+        return render_template("result.html")
+    else:
+        return redirect("login")
 
 
 @main.route("/result/<folder_name>", methods=["GET"])
 def result_folder(folder_name):
-    return redirect("login")
+    if "user" in session and "akun" in session:
+        return render_template("result_files.html")
+    else:
+        return redirect("login")
 
 
 @main.route("/download/<folder>/<name>", methods=["GET"])
 def download(folder, name):
-    return redirect("login")
+    if "user" in session and "akun" in session:
+        return render_template("home.html")
+    else:
+        return redirect("login")
 
 
 @main.route("/profile")
 def profile():
-    return redirect("login")
+    if "user" in session and "akun" in session:
+        return render_template("profile.html")
+    else:
+        return redirect("login")
 
 
 @main.route("/logout", methods=["GET"])
