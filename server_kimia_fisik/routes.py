@@ -1,13 +1,22 @@
 from flask import Blueprint, render_template, redirect, request, session
+from os import mkdir, getcwd
+from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .pyrebase_init import (
     create_new_user,
+    createdAt,
     login_firebase,
     reset_password,
     verify_status,
     update_verify_status_db,
 )
 
+
 main = Blueprint("main", __name__)
+
+
+def pop_session():
+    session.pop("user")
+    session.pop("akun")
 
 
 @main.route("/")
@@ -22,6 +31,8 @@ def index():
 def login():
     if "user" in session and "akun" in session:
         return redirect("home")
+    if request.method == "GET":
+        return render_template("auth.html")
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
@@ -29,14 +40,26 @@ def login():
         try:
             if verify_status(session["akun"]) == True:
                 update_verify_status_db(email, session["akun"])
-                return redirect("home")
+                created_date = createdAt(session["akun"])
+                email_folder = email_at_to_underscore_and_remove_dot(email)
+                try:
+                    try:
+                        mkdir(f"{getcwd()}\\user_data")
+                        mkdir(f"{getcwd()}\\user_data\\{email_folder}_{created_date}")
+                    except OSError:
+                        pass
+                    return redirect("home")
+                except:
+                    pop_session()
+                    return render_template("auth.html", error="Try again")
             else:
-                session.pop("user")
-                session.pop("akun")
+                pop_session()
                 return render_template("auth.html", error="Verify your email")
         except:
-            return render_template("auth.html", error="Wrong Email or Password")
-    return render_template("auth.html")
+            pop_session()
+            return render_template("auth.html", error="Try again")
+    else:
+        return render_template("auth.html", error="Wrong Email or Password")
 
 
 @main.route("/register", methods=["GET", "POST"])
@@ -114,8 +137,7 @@ def logout():
     if "user" not in session and "akun" not in session:
         return redirect("login")
     else:
-        session.pop("akun")
-        session.pop("user")
+        pop_session()
         return redirect("login")
 
 
