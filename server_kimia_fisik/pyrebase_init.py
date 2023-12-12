@@ -48,6 +48,12 @@ def verify_status(session):
     return status
 
 
+def createdAt(session):
+    info = account_info(session)
+    created_date = info["users"][0]["createdAt"]
+    return created_date
+
+
 def verify_status_db(email):
     status = (
         db.child("user_data")
