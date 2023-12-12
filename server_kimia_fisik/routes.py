@@ -1,5 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, session
-from .pyrebase_init import create_new_user, login_firebase, reset_password
+from .pyrebase_init import (
+    create_new_user,
+    login_firebase,
+    reset_password,
+    verify_status,
+    update_verify_status_db,
+)
 
 main = Blueprint("main", __name__)
 
@@ -20,7 +26,16 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
         session["akun"], session["user"] = login_firebase(email, password)
-        return redirect("home")
+        try:
+            if verify_status(session["akun"]) == True:
+                update_verify_status_db(email, session["akun"])
+                return redirect("home")
+            else:
+                session.pop("user")
+                session.pop("akun")
+                return render_template("auth.html", error="Verify your email")
+        except:
+            return render_template("auth.html", error="Wrong Email or Password")
     return render_template("auth.html")
 
 

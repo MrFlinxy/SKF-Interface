@@ -42,5 +42,27 @@ def account_info(session_akun):
     return account_info
 
 
+def verify_status(session):
+    info = account_info(session)
+    status = info["users"][0]["emailVerified"]
+    return status
+
+
+def verify_status_db(email):
+    status = (
+        db.child("user_data")
+        .child(f"{email_dot_to_comma(email)}")
+        .child("verified")
+        .get()
+    )
+    return status.val()
+
+
+def update_verify_status_db(email, session):
+    db.child("user_data").child(f"{email_dot_to_comma(email)}").update(
+        {"verified": verify_status(session)}
+    )
+
+
 def reset_password(email):
     auth.send_password_reset_email(email)
