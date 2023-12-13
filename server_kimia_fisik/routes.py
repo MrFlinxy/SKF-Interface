@@ -1,5 +1,7 @@
+from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, request, session
-from os import mkdir, getcwd, path
+from json import load
+from os import mkdir, getcwd, path, system
 from re import sub
 from .pyrebase_init import (
     create_new_user,
@@ -172,7 +174,51 @@ def jsme(software):
 def queue():
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
-        return render_template("queue.html")
+        system(f"squeue --json > squeue.json")
+        with open("squeue.json", "r") as f:
+            data = load(f)
+            result = []
+            queues_len = 0
+            if data["jobs"] == []:
+                return render_template(
+                    "queue.html",
+                    message="Tidak ada antrian komputasi",
+                    queues=result,
+                    queues_len=range(queues_len),
+                )
+            else:
+                for i in range(len(data["jobs"])):
+                    # Extracting the data from json
+                    job_name = data["jobs"][i]["name"][:-3]
+                    job_status = data["jobs"][i]["job_state"]
+                    job_submit_time = data["jobs"][i]["submit_time"]
+
+                    # Converting the data into human-readable format
+                    job_submit_time_hms = datetime.fromtimestamp(
+                        job_submit_time
+                    ).strftime("%d-%m-%Y %H:%M:%S")
+
+                    # Collecting time data at now
+                    now_time = datetime.now().timestamp()
+
+                    # Subtracting the now with job submitted to get the job time
+                    job_runtime_epoch = int(now_time - job_submit_time)
+
+                    # Formatting the job time in HH:MM:SS
+                    job_runtime_hms = str(timedelta(seconds=job_runtime_epoch))
+
+                    # Result list
+                    result_i = [
+                        job_name,
+                        job_status,
+                        job_submit_time_hms,
+                        job_runtime_hms,
+                    ]
+                    result.append(result_i)
+                    queues_len = len(result)
+        return render_template(
+            "queue.html", queues=result, queues_len=range(queues_len)
+        )
     else:
         return redirect("login")
 
