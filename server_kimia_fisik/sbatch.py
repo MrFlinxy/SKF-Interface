@@ -51,14 +51,14 @@ def orca_submit(file, email, session):
     folder_name = user_folder_name(email, session)
     email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
     with open(
-        f"user_data/{folder_name}/{filename}/{email_sbatch}***.sh",
+        f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
         "w",
     ) as sbatch:
         sbatch.write(sbatch_content)
 
     # Running sbatch
     system(
-        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{filename}/{email_sbatch}***.sh"
+        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh"
     )
 
 
