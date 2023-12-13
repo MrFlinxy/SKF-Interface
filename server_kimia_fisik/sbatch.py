@@ -61,7 +61,7 @@ def orca_jsme(
     except FileExistsError:
         pass
 
-    with open(f"", "w") as f:
+    with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
 
     system(
