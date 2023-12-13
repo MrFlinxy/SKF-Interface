@@ -1,5 +1,6 @@
-from os import environ, mkdir, path, system
+from os import environ, getcwd, mkdir, path, system
 from dotenv import load_dotenv
+from re import sub
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .pyrebase_init import user_folder_name
 
@@ -22,7 +23,25 @@ export OMP_NUM_THREADS=1"""
 gaussian_export = """"""
 
 
-def orca_submit(folder_path, filename, email, session):
+def orca_submit(file, email, session):
+    # Upload file
+    filename = file.filename
+    folder_path = path.join(getcwd(), "user_data")
+    user_folder = path.join(folder_path, user_folder_name(email, session))
+    try:
+        file_folder = path.join(user_folder, filename[:-4])
+        mkdir(file_folder)
+    except FileExistsError:
+        pass
+    file.save(path.join(file_folder, filename))
+    # File content edit
+    file_edit = path.join(file_folder, filename)
+    new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
+    with open(new_file, "w") as f:
+        for line in open(str(file_edit), "r").readlines():
+            line = sub(r"nprocs.+", r"nprocs 4", line)
+            line = sub(r"%maxcore.+", r"%maxcore 2048", line)
+            f.write(line)
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename)
     orca_cmd = f"{orca_full_path} {file_path}/{filename}_.inp > {file_path}/{filename}.out --oversubscribe"

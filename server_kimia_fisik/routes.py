@@ -119,31 +119,8 @@ def submit(software):
         if request.method == "GET" and software == "ORCA":
             return render_template("submit_ORCA.html")
         if request.method == "POST" and software == "ORCA":
-            # Upload file and create file folder
-            file = request.files["file"]
-            filename = file.filename
-            folder_path = path.join(getcwd(), "user_data")
-            user_folder = path.join(
-                folder_path, user_folder_name(session["user"], session["akun"])
-            )
-            try:
-                file_folder = path.join(user_folder, filename[:-4])
-                mkdir(file_folder)
-            except FileExistsError:
-                pass
-            file.save(path.join(file_folder, filename))
-
-            # File content edit
-            file_edit = path.join(file_folder, filename)
-            new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
-            with open(new_file, "w") as f:
-                for line in open(str(file_edit), "r").readlines():
-                    line = sub(r"nprocs.+", r"nprocs 4", line)
-                    line = sub(r"%maxcore.+", r"%maxcore 2048", line)
-                    f.write(line)
             orca_submit(
-                folder_path,
-                filename[:-4],
+                request.files["file"],
                 session["user"],
                 session["akun"],
             )
