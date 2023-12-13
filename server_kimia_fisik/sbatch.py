@@ -43,7 +43,7 @@ def orca_submit(file, email, session):
             line = sub(r"%maxcore.+", r"%maxcore 2048", line)
             f.write(line)
     # Creating sbatch contents
-    file_path = path.join(folder_path, user_folder_name(email, session), filename)
+    file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
     orca_cmd = f"{orca_full_path} {file_path}/{filename[:-4]}_.inp > {file_path}/{filename[:-4]}.out --oversubscribe"
     sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
 
