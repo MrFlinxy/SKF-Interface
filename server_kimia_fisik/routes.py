@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, redirect, request, session
-from os import mkdir, getcwd
+from os import mkdir, getcwd, path
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .pyrebase_init import (
     create_new_user,
     createdAt,
+    extend_token,
     login_firebase,
     reset_password,
     verify_status,
@@ -22,6 +23,7 @@ def pop_session():
 @main.route("/")
 def index():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return redirect("home")
     else:
         return redirect("login")
@@ -30,6 +32,7 @@ def index():
 @main.route("/login", methods=["GET", "POST"])
 def login():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return redirect("home")
     if request.method == "GET":
         return render_template("auth.html")
@@ -42,10 +45,13 @@ def login():
                 update_verify_status_db(email, session["akun"])
                 created_date = createdAt(session["akun"])
                 email_folder = email_at_to_underscore_and_remove_dot(email)
+                folder_path = path.join(getcwd(), "user_data")
+                user_folder = path.join(folder_path, f"{email_folder}_{created_date}")
+                print(session)
                 try:
                     try:
-                        mkdir(f"{getcwd()}\\user_data")
-                        mkdir(f"{getcwd()}\\user_data\\{email_folder}_{created_date}")
+                        mkdir(folder_path)
+                        mkdir(user_folder)
                     except OSError:
                         pass
                     return redirect("home")
@@ -65,6 +71,7 @@ def login():
 @main.route("/register", methods=["GET", "POST"])
 def register():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return redirect("home")
     if request.method == "POST":
         reg_email = request.form.get("registration_email")
@@ -84,6 +91,7 @@ def register():
 @main.route("/resetpassword", methods=["GET", "POST"])
 def resetpassword():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return redirect("home")
     if request.method == "POST":
         email_to_reset = request.form.get("email")
@@ -95,6 +103,7 @@ def resetpassword():
 @main.route("/home", methods=["GET"])
 def home():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return render_template("home.html")
     else:
         return redirect("login")
@@ -103,6 +112,7 @@ def home():
 @main.route("/submit/<software>", methods=["GET", "POST"])
 def submit(software):
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         if request.method == "GET" and software == "menu":
             return render_template("submit_software.html")
 
@@ -122,6 +132,7 @@ def submit(software):
 @main.route("/jsme/<software>", methods=["POST"])
 def jsme(software):
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         if request.method == "POST" and software == "ORCA":
             return render_template("submit_ORCA.html")
         if request.method == "POST" and software == "Gaussian":
@@ -133,6 +144,7 @@ def jsme(software):
 @main.route("/queue")
 def queue():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return render_template("queue.html")
     else:
         return redirect("login")
@@ -141,6 +153,7 @@ def queue():
 @main.route("/result")
 def result():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return render_template("result.html")
     else:
         return redirect("login")
@@ -149,6 +162,7 @@ def result():
 @main.route("/result/<folder_name>", methods=["GET"])
 def result_folder(folder_name):
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return render_template("result_files.html")
     else:
         return redirect("login")
@@ -157,6 +171,7 @@ def result_folder(folder_name):
 @main.route("/download/<folder>/<name>", methods=["GET"])
 def download(folder, name):
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return render_template("home.html")
     else:
         return redirect("login")
@@ -165,6 +180,7 @@ def download(folder, name):
 @main.route("/profile")
 def profile():
     if "user" in session and "akun" in session:
+        session["akun"] = extend_token(session["akun"])
         return render_template("profile.html")
     else:
         return redirect("login")
@@ -173,6 +189,7 @@ def profile():
 @main.route("/logout", methods=["GET"])
 def logout():
     if "user" not in session and "akun" not in session:
+        session["akun"] = extend_token(session["akun"])
         return redirect("login")
     else:
         pop_session()

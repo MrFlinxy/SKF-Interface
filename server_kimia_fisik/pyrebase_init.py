@@ -37,6 +37,10 @@ def login_firebase(email, password):
     return user, email
 
 
+def extend_token(session_akun):
+    return auth.refresh(session_akun["refreshToken"])
+
+
 def account_info(session_akun):
     account_info = auth.get_account_info(session_akun["idToken"])
     return account_info
