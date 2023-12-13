@@ -48,7 +48,6 @@ def login():
                 user_folder = path.join(
                     folder_path, user_folder_name(email, session["akun"])
                 )
-                print(session)
                 try:
                     try:
                         mkdir(folder_path)
