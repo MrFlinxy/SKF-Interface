@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import Blueprint, render_template, redirect, request, session
+from flask import Blueprint, render_template, redirect, request, send_file, session
 from json import load
 from os import mkdir, getcwd, listdir, path, system
 from re import search
@@ -264,7 +264,8 @@ def result_folder(folder_name):
 def download(folder, name):
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
-        return render_template("home.html")
+        user_folder = user_folder_name(session["user"], session["akun"])
+        return send_file(f"user_data/{user_folder}/{folder}/{name}", as_attachment=True)
     else:
         return redirect("login")
 
