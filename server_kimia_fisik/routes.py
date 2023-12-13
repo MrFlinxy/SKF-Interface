@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, request, session
 from json import load
 from os import mkdir, getcwd, listdir, path, system
-from re import sub
+from re import search
 from .pyrebase_init import (
     create_new_user,
     extend_token,
@@ -243,7 +243,18 @@ def result():
 def result_folder(folder_name):
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
-        return render_template("result_files.html")
+        user_folder = user_folder_name(session["user"], session["akun"])
+        result = listdir(user_folder)
+        # Filtering
+        res = []
+        for i in result:
+            tmp = search("\.tmp$", i)
+            sh = search("\.sh$", i)
+            smi = search("\.smi$", i)
+            smix = search("_smi\.xyz$", i)
+            if sh == None and tmp == None and smi == None and smix == None:
+                res.append(i)
+        return render_template("result_files.html", hasil=res, nama_folder=folder_name)
     else:
         return redirect("login")
 
