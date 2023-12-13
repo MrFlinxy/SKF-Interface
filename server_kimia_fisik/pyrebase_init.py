@@ -1,7 +1,7 @@
 import pyrebase
 from dotenv import load_dotenv
 from os import environ
-from .email_preprocess import email_dot_to_comma
+from .email_preprocess import email_dot_to_comma, email_at_to_underscore_and_remove_dot
 
 load_dotenv(".env")
 
@@ -66,6 +66,12 @@ def verify_status_db(email):
         .get()
     )
     return status.val()
+
+
+def user_folder_name(email, session):
+    email = email_at_to_underscore_and_remove_dot(email)
+    created_date = createdAt(session)
+    return f"{email}_{created_date}"
 
 
 def update_verify_status_db(email, session):

@@ -1,15 +1,16 @@
 from flask import Blueprint, render_template, redirect, request, session
 from os import mkdir, getcwd, path
-from .email_preprocess import email_at_to_underscore_and_remove_dot
+from re import sub
 from .pyrebase_init import (
     create_new_user,
-    createdAt,
     extend_token,
     login_firebase,
     reset_password,
     verify_status,
     update_verify_status_db,
+    user_folder_name,
 )
+from .sbatch import orca_submit
 
 
 main = Blueprint("main", __name__)
@@ -43,10 +44,10 @@ def login():
         try:
             if verify_status(session["akun"]) == True:
                 update_verify_status_db(email, session["akun"])
-                created_date = createdAt(session["akun"])
-                email_folder = email_at_to_underscore_and_remove_dot(email)
                 folder_path = path.join(getcwd(), "user_data")
-                user_folder = path.join(folder_path, f"{email_folder}_{created_date}")
+                user_folder = path.join(
+                    folder_path, user_folder_name(email, session["akun"])
+                )
                 print(session)
                 try:
                     try:
@@ -119,12 +120,40 @@ def submit(software):
         if request.method == "GET" and software == "ORCA":
             return render_template("submit_ORCA.html")
         if request.method == "POST" and software == "ORCA":
-            return redirect("submit/ORCA")
+            # Upload file and create file folder
+            file = request.files["file"]
+            filename = file.filename
+            folder_path = path.join(getcwd(), "user_data")
+            user_folder = path.join(
+                folder_path, user_folder_name(session["user"], session["akun"])
+            )
+            try:
+                file_folder = path.join(user_folder, filename[:-4])
+                mkdir(file_folder)
+            except FileExistsError:
+                pass
+            file.save(path.join(file_folder, filename))
+
+            # File content edit
+            file_edit = path.join(file_folder, filename)
+            new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
+            with open(new_file, "w") as f:
+                for line in open(str(file_edit), "r").readlines():
+                    line = sub(r"nprocs.+", r"nprocs 4", line)
+                    line = sub(r"%maxcore.+", r"%maxcore 2048", line)
+                    f.write(line)
+            orca_submit(
+                folder_path,
+                filename[:-4],
+                session["user"],
+                session["akun"],
+            )
+            return redirect("ORCA")
 
         if request.method == "GET" and software == "Gaussian":
             return render_template("submit_Gaussian.html")
         if request.method == "POST" and software == "Gaussian":
-            return redirect("submit/Gaussian")
+            return redirect("Gaussian")
     else:
         return redirect("login")
 
