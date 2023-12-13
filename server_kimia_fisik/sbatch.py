@@ -1,4 +1,4 @@
-from os import environ, path
+from os import environ, path, system
 from dotenv import load_dotenv
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .pyrebase_init import user_folder_name
@@ -23,21 +23,24 @@ gaussian_export = """"""
 
 
 def orca_submit(folder_path, filename, email, session):
-    # Creating sbatch shell script file
+    # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename)
     orca_cmd = f"{orca_full_path} {file_path}_.inp > {file_path}.out --oversubscribe"
     sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
 
+    # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)
     email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
-    sbatch_file = path.join(file_path, email_sbatch)
-    print(sbatch_file)
     with open(
         f"user_data/{folder_name}/{filename}/{email_sbatch}***.sh",
         "w",
     ) as sbatch:
         sbatch.write(sbatch_content)
+
     # Running sbatch
+    system(
+        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{filename}/{email_sbatch}***.sh"
+    )
 
 
 def orca_jsme(orca_path):
