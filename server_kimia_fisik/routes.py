@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, request, session
 from json import load
-from os import mkdir, getcwd, path, system
+from os import mkdir, getcwd, listdir, path, system
 from re import sub
 from .pyrebase_init import (
     create_new_user,
@@ -227,7 +227,14 @@ def queue():
 def result():
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
-        return render_template("result.html")
+        user_folder_name = user_folder_name(session["user"], session["akun"])
+        listdir_user_data = listdir(f"user_data/{user_folder_name}")
+        if len(listdir_user_data) != 0:
+            return render_template("result.html", hasil=listdir_user_data)
+        else:
+            return render_template(
+                "result.html", error="Tidak ada hasil Komputasi", show="."
+            )
     else:
         return redirect("login")
 
