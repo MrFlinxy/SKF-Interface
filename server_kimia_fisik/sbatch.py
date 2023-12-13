@@ -44,7 +44,7 @@ def orca_submit(file, email, session):
             f.write(line)
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename)
-    orca_cmd = f"{orca_full_path} {file_path}/{filename}_.inp > {file_path}/{filename}.out --oversubscribe"
+    orca_cmd = f"{orca_full_path} {file_path}/{filename[:-4]}_.inp > {file_path}/{filename[:-4]}.out --oversubscribe"
     sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
 
     # Creating sbatch shell script file
