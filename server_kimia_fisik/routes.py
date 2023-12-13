@@ -265,7 +265,7 @@ def download(folder, name):
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
         user_folder = user_folder_name(session["user"], session["akun"])
-        file_path = f"user_data/{user_folder}/{folder}/{name}"
+        file_path = f"../user_data/{user_folder}/{folder}/{name}"
         return send_file(file_path, as_attachment=True)
     else:
         return redirect("login")
