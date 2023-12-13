@@ -10,7 +10,7 @@ from .pyrebase_init import (
     update_verify_status_db,
     user_folder_name,
 )
-from .sbatch import orca_submit
+from .sbatch import orca_submit, orca_jsme
 
 
 main = Blueprint("main", __name__)
@@ -162,6 +162,28 @@ def jsme(software):
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
         if request.method == "POST" and software == "ORCA":
+            smiles = request.form.get("smiles")
+            jsme_nama = request.form.get("nama_file")
+            calc_type = request.form.get("calc_type")
+            basis_set = request.form.get("basis_set")
+            teori = request.form.get("teori")
+            muatan = request.form.get("muatan")
+            multiplisitas = request.form.get("multiplisitas")
+            orbital = request.form.get("orbital")
+            folder_name = user_folder_name(session["user"], session["akun"])
+            orca_jsme(
+                smiles,
+                jsme_nama,
+                calc_type,
+                basis_set,
+                teori,
+                muatan,
+                multiplisitas,
+                orbital,
+                folder_name,
+                session["user"],
+                session["akun"],
+            )
             return render_template("submit_ORCA.html")
         if request.method == "POST" and software == "Gaussian":
             return render_template("submit_Gaussian.html")
