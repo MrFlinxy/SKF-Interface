@@ -25,7 +25,7 @@ gaussian_export = """"""
 def orca_submit(folder_path, filename, email, session):
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename)
-    orca_cmd = f"{orca_full_path} {file_path}_.inp > {file_path}.out --oversubscribe"
+    orca_cmd = f"{orca_full_path} {file_path}/{filename}_.inp > {file_path}/{filename}.out --oversubscribe"
     sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
 
     # Creating sbatch shell script file
