@@ -244,7 +244,7 @@ def result_folder(folder_name):
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
         user_folder = user_folder_name(session["user"], session["akun"])
-        folder = f"{user_folder}/{folder_name}"
+        folder = f"user_data/{user_folder}/{folder_name}"
         result = listdir(folder)
         # Filtering
         res = []
