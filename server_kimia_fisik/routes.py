@@ -227,8 +227,8 @@ def queue():
 def result():
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
-        user_folder_name = user_folder_name(session["user"], session["akun"])
-        listdir_user_data = listdir(f"user_data/{user_folder_name}")
+        user_folder = user_folder_name(session["user"], session["akun"])
+        listdir_user_data = listdir(f"user_data/{user_folder}")
         if len(listdir_user_data) != 0:
             return render_template("result.html", hasil=listdir_user_data)
         else:
