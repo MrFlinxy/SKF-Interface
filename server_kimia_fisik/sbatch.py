@@ -151,6 +151,7 @@ def gaussian_submit(file, email, session):
     filename = file.filename
     folder_path = path.join(getcwd(), "user_data")
     user_folder = path.join(folder_path, user_folder_name(email, session))
+    folder_name = user_folder_name(email, session)
     get_cwd = getcwd()
     try:
         file_folder = path.join(user_folder, filename[:-4])
@@ -174,7 +175,6 @@ def gaussian_submit(file, email, session):
             )
             f.write(line)
     # Creating sbatch contents
-    folder_name = user_folder_name(email, session)
     file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
     gaussian_cmd = f"{gaussian_full_path} < {file_path}/{filename[:-4]}_.gjf > {file_path}/{filename[:-4]}.out"
     scrdir = f"export GAUSS_SCRDIR={get_cwd}/user_data/{folder_name}/{filename[:-4]}"
