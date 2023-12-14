@@ -25,7 +25,7 @@ export PATH=/usr/local/bin/:$PATH
 export OMP_NUM_THREADS=1
 export g09root={gaussian_full_path[:-4]}
 export GAUSS_EXEDIR={gaussian_full_path}
-. $g09root/g09.profile"""
+. $g09root/g09/bsd/g09.profile"""
 
 
 def orca_submit(file, email, session):
