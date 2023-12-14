@@ -12,7 +12,7 @@ from .pyrebase_init import (
     update_verify_status_db,
     user_folder_name,
 )
-from .sbatch import orca_submit, orca_jsme
+from .sbatch import orca_submit, orca_jsme, gaussian_submit, gaussian_jsme
 
 
 main = Blueprint("main", __name__)
@@ -131,6 +131,11 @@ def submit(software):
         if request.method == "GET" and software == "Gaussian":
             return render_template("submit_Gaussian.html")
         if request.method == "POST" and software == "Gaussian":
+            gaussian_submit(
+                request.files["file"],
+                session["user"],
+                session["akun"],
+            )
             return redirect("Gaussian")
     else:
         return redirect("login")

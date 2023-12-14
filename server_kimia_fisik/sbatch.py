@@ -20,7 +20,12 @@ orca_export = """export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export PATH=/usr/local/bin/:$PATH
 export OMP_NUM_THREADS=1"""
 
-gaussian_export = """"""
+gaussian_export = f"""export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export PATH=/usr/local/bin/:$PATH
+export OMP_NUM_THREADS=1
+export g09root={gaussian_full_path[:-4]}
+export GAUSS_EXEDIR={gaussian_full_path}
+. $g09root/g09.profile"""
 
 
 def orca_submit(file, email, session):
@@ -39,7 +44,7 @@ def orca_submit(file, email, session):
     new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
     with open(new_file, "w") as f:
         for line in open(str(file_edit), "r").readlines():
-            line = sub(r"nprocs.+", r"nprocs 4", line)
+            line = sub(r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line)
             line = sub(r"%maxcore.+", r"%maxcore 2048", line)
             f.write(line)
     # Creating sbatch contents
@@ -113,7 +118,7 @@ end"""
 {orbital_inp}
 
 %pal
-   nprocs 4
+   nprocs {orca_cpus_per_job}
 end
 
 * xyz {muatan} {multiplisitas}
@@ -141,9 +146,117 @@ end
     )
 
 
-def gaussian_submit():
-    pass
+def gaussian_submit(file, email, session):
+    # Upload file
+    filename = file.filename
+    folder_path = path.join(getcwd(), "user_data")
+    user_folder = path.join(folder_path, user_folder_name(email, session))
+    get_cwd = getcwd()
+    try:
+        file_folder = path.join(user_folder, filename[:-4])
+        mkdir(file_folder)
+    except FileExistsError:
+        pass
+    file.save(path.join(file_folder, filename))
+    # File content edit
+    file_edit = path.join(file_folder, filename)
+    new_file = path.join(file_folder, f"{filename[:-4]}_.gjf")
+    with open(new_file, "w") as f:
+        for line in open(str(file_edit), "r").readlines():
+            line = sub(
+                r"%NProcShared=.+", rf"%NProcShared={gaussian_cpus_per_job}", line
+            )
+            line = sub(r"%mem=.+", r"%mem=2GB", line)
+            line = sub(
+                r"%Chk=.+",
+                rf"%chk={get_cwd}/user_data/{folder_name}/{filename[:-4]}/{filename[:-4]}.chk\n%RWF={getcwd()}/user_data/{folder_name}/{filename[:-4]}/{filename[:-4]}.rwf",
+                line,
+            )
+            f.write(line)
+    # Creating sbatch contents
+    folder_name = user_folder_name(email, session)
+    file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
+    gaussian_cmd = f"{gaussian_full_path} < {file_path}/{filename[:-4]}_.gjf > {file_path}/{filename[:-4]}.out"
+    scrdir = f"export GAUSS_SCRDIR={get_cwd}/user_data/{folder_name}/{filename[:-4]}"
+    sbatch_content = (
+        f"""{sbatch_header}\n\n{gaussian_export}\n{scrdir}\n\n{gaussian_cmd}"""
+    )
+
+    # Creating sbatch shell script file
+    email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
+    with open(
+        f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
+        "w",
+    ) as sbatch:
+        sbatch.write(sbatch_content)
+
+    # Running sbatch
+    system(
+        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh"
+    )
 
 
-def gaussian_jsme():
-    pass
+def gaussian_jsme(
+    smiles,
+    jsme_nama,
+    calc_type,
+    basis_set,
+    teori,
+    muatan,
+    multiplisitas,
+    folder_name,
+    email,
+    session,
+):
+    try:
+        mkdir(f"user_data/{folder_name}/{jsme_nama}")
+    except FileExistsError:
+        pass
+
+    with open(f"upload/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
+        f.write(smiles)
+    system(
+        f"obabel -ismi upload/{folder_name}/{jsme_nama}/{jsme_nama}.smi -oxyz -Oupload/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz --gen3d"
+    )
+
+    with open(
+        f"upload/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
+    ) as coord_xyz:
+        dummy0 = coord_xyz.readline()
+        dummy1 = coord_xyz.readline()
+        lines = coord_xyz.read()
+        koordinat = lines
+
+    get_cwd = getcwd()
+
+    gaussian_gjf = f"""%NProcShared={gaussian_cpus_per_job}
+%mem=2GB
+%chk={get_cwd}/user_data/{folder_name}/{jsme_nama}/{jsme_nama}.chk
+%RWF={get_cwd}/user_data/{folder_name}/{jsme_nama}/{jsme_nama}.rwf
+# {teori}/{basis_set} {calc_type}  
+
+ {jsme_nama} | {calc_type} | {teori}/{basis_set}
+
+{muatan} {multiplisitas}
+{koordinat}
+
+"""
+    with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.gjf", "w") as f:
+        f.write(gaussian_gjf)
+
+    gaussian_cmd = f"{gaussian_full_path} < user_data/{folder_name}/{jsme_nama}/{jsme_nama}.inp > user_data/{folder_name}/{jsme_nama}/{jsme_nama}.out"
+    sbatch_content = f"""{sbatch_header}\n\n{gaussian_export}\n\n{gaussian_cmd}"""
+
+    # Creating sbatch shell script file
+    folder_name = user_folder_name(email, session)
+    email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
+    with open(
+        f"user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh",
+        "w",
+    ) as sbatch:
+        sbatch.write(sbatch_content)
+
+    # Running sbatch
+    system(
+        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh"
+    )
