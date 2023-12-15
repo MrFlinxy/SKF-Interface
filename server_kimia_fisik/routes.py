@@ -200,7 +200,7 @@ def jsme(software):
 def queue():
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
-        Popen(["squeue", "--json", ">", "squeue.json"])
+        Popen(["squeue", "--json > squeue.json"])
         with open("squeue.json", "r") as f:
             data = load(f)
             result = []
