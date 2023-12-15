@@ -20,6 +20,8 @@ orca_export = """export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export PATH=/usr/local/bin/:$PATH
 export OMP_NUM_THREADS=1"""
 
+gaussian_export = """export GAUSS_EXEDIR=$g09root/g09"""
+
 
 def orca_submit(file, email, session):
     # Upload file
@@ -170,7 +172,7 @@ def gaussian_submit(file, email, session):
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
     gaussian_cmd = f"{gaussian_full_path} < {file_path}/{filename[:-4]}_.gjf > {file_path}/{filename[:-4]}.out"
-    sbatch_content = f"""{sbatch_header}\n\n{gaussian_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n{gaussian_export}\n\n{gaussian_cmd}"""
 
     # Creating sbatch shell script file
     email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
