@@ -236,7 +236,7 @@ def gaussian_jsme(
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.gjf", "w") as f:
         f.write(gaussian_gjf)
 
-    gaussian_cmd = f"{gaussian_full_path} < user_data/{folder_name}/{jsme_nama}/{jsme_nama}.inp > user_data/{folder_name}/{jsme_nama}/{jsme_nama}.out"
+    gaussian_cmd = f"{gaussian_full_path} < user_data/{folder_name}/{jsme_nama}/{jsme_nama}.gjf > user_data/{folder_name}/{jsme_nama}/{jsme_nama}.out"
     sbatch_content = f"""{sbatch_header}\n{gaussian_export}\n\n{gaussian_cmd}"""
 
     # Creating sbatch shell script file
