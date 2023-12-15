@@ -237,7 +237,7 @@ def gaussian_jsme(
         f.write(gaussian_gjf)
 
     gaussian_cmd = f"{gaussian_full_path} < user_data/{folder_name}/{jsme_nama}/{jsme_nama}.inp > user_data/{folder_name}/{jsme_nama}/{jsme_nama}.out"
-    sbatch_content = f"""{sbatch_header}\n\n{gaussian_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n{gaussian_export}\n\n{gaussian_cmd}"""
 
     # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)

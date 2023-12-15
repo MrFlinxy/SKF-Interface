@@ -170,6 +170,26 @@ def jsme(software):
             )
             return render_template("submit_ORCA.html")
         if request.method == "POST" and software == "Gaussian":
+            smiles = request.form.get("smiles")
+            jsme_nama = request.form.get("nama_file")
+            calc_type = request.form.get("calc_type")
+            basis_set = request.form.get("basis_set")
+            teori = request.form.get("teori")
+            muatan = request.form.get("muatan")
+            multiplisitas = request.form.get("multiplisitas")
+            folder_name = user_folder_name(session["user"], session["akun"])
+            gaussian_jsme(
+                smiles,
+                jsme_nama,
+                calc_type,
+                basis_set,
+                teori,
+                muatan,
+                multiplisitas,
+                folder_name,
+                session["user"],
+                session["akun"],
+            )
             return render_template("submit_Gaussian.html")
     else:
         return redirect("login")
