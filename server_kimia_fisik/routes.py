@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, request, send_file, session
 from json import load
-from os import mkdir, getcwd, listdir, path, system
+from os import mkdir, getcwd, listdir, path
 from re import search
+from subprocess import Popen
 from .pyrebase_init import (
     create_new_user,
     extend_token,
@@ -199,7 +200,7 @@ def jsme(software):
 def queue():
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
-        system(f"squeue --json > squeue.json")
+        Popen(["squeue", "--json", ">", "squeue.json"])
         with open("squeue.json", "r") as f:
             data = load(f)
             result = []

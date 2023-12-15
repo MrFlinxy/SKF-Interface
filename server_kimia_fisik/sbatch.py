@@ -1,4 +1,4 @@
-from os import environ, getcwd, mkdir, path, system
+from os import environ, getcwd, mkdir, path
 from dotenv import load_dotenv
 from re import sub
 from subprocess import Popen
@@ -58,8 +58,13 @@ def orca_submit(file, email, session):
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    system(
-        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh"
+    Popen(
+        [
+            "sbatch",
+            "--output=/dev/null",
+            "--error=/dev/null",
+            f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
+        ]
     )
 
 
@@ -144,8 +149,13 @@ end
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    system(
-        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh"
+    Popen(
+        [
+            "sbatch",
+            "--output=/dev/null",
+            "--error=/dev/null",
+            f"user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh",
+        ]
     )
 
 
@@ -191,8 +201,13 @@ def gaussian_submit(file, email, session):
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    system(
-        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh"
+    Popen(
+        [
+            "sbatch",
+            "--output=/dev/null",
+            "--error=/dev/null",
+            f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
+        ]
     )
 
 
@@ -215,8 +230,15 @@ def gaussian_jsme(
 
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
-    system(
-        f"obabel -ismi user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi -oxyz -Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz --gen3d"
+    Popen(
+        [
+            "obabel",
+            "-ismi",
+            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
+            "-oxyz",
+            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
+            "--gen3d",
+        ]
     )
 
     with open(
@@ -257,6 +279,11 @@ def gaussian_jsme(
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    system(
-        f"sbatch --output=/dev/null --error=/dev/null user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh"
+    Popen(
+        [
+            "sbatch",
+            "--output=/dev/null",
+            "--error=/dev/null",
+            f"user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh",
+        ]
     )
