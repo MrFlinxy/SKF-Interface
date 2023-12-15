@@ -205,14 +205,14 @@ def gaussian_jsme(
     except FileExistsError:
         pass
 
-    with open(f"upload/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
+    with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
     system(
-        f"obabel -ismi upload/{folder_name}/{jsme_nama}/{jsme_nama}.smi -oxyz -Oupload/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz --gen3d"
+        f"obabel -ismi user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi -oxyz -Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz --gen3d"
     )
 
     with open(
-        f"upload/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
+        f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
     ) as coord_xyz:
         dummy0 = coord_xyz.readline()
         dummy1 = coord_xyz.readline()
