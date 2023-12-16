@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, request, send_file, session
-from json import load
+from json import loads
 from os import mkdir, getcwd, listdir, path
 from re import search
-from subprocess import Popen
+from subprocess import PIPE, Popen
 from .pyrebase_init import (
     create_new_user,
     extend_token,
@@ -201,12 +201,12 @@ def queue():
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
         # Saving squeue into json file
-        squeue_file = open("squeue.json", "w")
-        Popen(["squeue", "--json"], stdout=squeue_file)
+        squeue_file = (
+            Popen(["squeue", "--json"], stdout=PIPE).communicate()[0].decode("utf-8")
+        )
 
         # Reading squeue json file
-        squeue_json = open("squeue.json", "r")
-        data = load(squeue_json)
+        data = loads(squeue_file)
         result = []
         queues_len = 0
         if data["jobs"] == []:
