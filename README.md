@@ -14,15 +14,15 @@
 <p>
   <a href="https://www.python.org/">
     <img alt="Python Logo" src="./images/python-logo.svg" width="30">
-  </a>
+  </a> <h3>Python</h3>
 </p>
-<h3>Python</h3>
+
 <p>
   <a href="https://www.schedmd.com/">
     <img alt="Slurm Logo" src="./images/slurm-logo.svg" width="30">
-  </a>
+  </a> <h3>Slurm Workload Manager</h3>
 </p>
-<h3>Slurm Workload Manager</h3>
+
 <p>
   <a href="/">
     <img alt="HTML Logo" src="./images/html-logo.svg" width="30">
@@ -32,9 +32,9 @@
   </a>
   <a href="/">
     <img alt="JS Logo" src="./images/javascript-logo.svg" width="30">
-  </a>
+  </a> <h3>HTML・CSS・JavaScript</h3>
 </p>
-<h3>HTML・CSS・JavaScript</h3>
+
 </div>
 
 ## How to use
