@@ -19,7 +19,7 @@
 
 <p>
   <a href="https://www.schedmd.com/">
-    <img alt="Slurm Logo" src="./images/slurm-logo.svg" width="30">
+    <img alt="Slurm Logo" src="./images/slurm-logo.png" width="30">
   </a> <h3>Slurm Workload Manager</h3>
 </p>
 
