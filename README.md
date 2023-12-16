@@ -10,19 +10,43 @@
 
 ## Tech used for this project
 
+<div align="center">
+<h3>Python</h3>
+<p>
+  <a href="https://www.python.org/">
+    <img alt="Python Logo" src="./images/python-logo.svg" width="30">
+  </a>
+</p>
+<p>
+  <a href="https://www.schedmd.com/">
+    <img alt="Slurm Logo" src="./images/slurm-logo.svg" width="30">
+  </a>
+</p>
+<p>
+  <a href="/">
+    <img alt="HTML Logo" src="./images/html-logo.svg" width="30">
+  </a>
+  <a href="/">
+    <img alt="CSS Logo" src="./images/css-logo.svg" width="30">
+  </a>
+  <a href="/">
+    <img alt="JS Logo" src="./images/javascript-logo.svg" width="30">
+  </a>
+</p>
+</div>
+
 ## How to use
 
 Clone the repository
 
-```
+```console
 git clone https://github.com/MrFlinxy/SKF-Interface.git
 ```
 
 Creating .env file
 
 ```console
-cd SKF-Interface
-touch .env
+cd SKF-Interface; touch .env
 ```
 
 put the following into the .env file
