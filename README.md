@@ -16,12 +16,14 @@
     <img alt="Python Logo" src="./images/python-logo.svg" width="30"><h3>Python</h3>
   </a>
 </p>
+<h2>・</h2>
 
 <p>
   <a href="https://www.schedmd.com/">
     <img alt="Slurm Logo" src="./images/slurm-logo.png" width="30"><h3>Slurm Workload Manager</h3>
   </a>
 </p>
+<h2>・</h2>
 
 <p>
   <a href="/">
@@ -34,6 +36,7 @@
     <img alt="JS Logo" src="./images/javascript-logo.svg" width="30">
   </a> <h3>HTML・CSS・JavaScript</h3>
 </p>
+<h2>・</h2>
 
 </div>
 
