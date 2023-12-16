@@ -11,6 +11,9 @@ orca_full_path = environ.get("orca_fullPath")
 gaussian_full_path = environ.get("gaussian_fullPath")
 orca_cpus_per_job = environ.get("orca_cpus_per_job")
 gaussian_cpus_per_job = environ.get("gaussian_cpus_per_job")
+GAUSS_EXEDIR = environ.get("GAUSS_EXEDIR")
+GAUSS_SCRDIR = environ.get("GAUSS_SCRDIR")
+
 
 sbatch_header = f"""#!/bin/bash
 #SBATCH --nodes=1
@@ -21,7 +24,8 @@ orca_export = """export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export PATH=/usr/local/bin/:$PATH
 export OMP_NUM_THREADS=1"""
 
-gaussian_export = """export GAUSS_EXEDIR=$g09root/g09"""
+gaussian_export = f"""export GAUSS_EXEDIR={GAUSS_EXEDIR}
+export GAUSS_SCRDIR={GAUSS_SCRDIR}"""
 
 
 def orca_submit(file, email, session):
@@ -89,21 +93,19 @@ def orca_jsme(
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
 
-    p = (
-        Popen(
-            [
-                "obabel",
-                "-ismi",
-                f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
-                "-oxyz",
-                f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
-                "--gen3d",
-            ],
-            stdout=PIPE,
-        )
-        .communicate()[0]
-        .decode("utf-8")
+    p = Popen(
+        [
+            "obabel",
+            "-ismi",
+            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
+            "-oxyz",
+            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
+            "--gen3d",
+        ],
+        stdout=PIPE,
     )
+
+    p.communicate()
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
@@ -235,21 +237,19 @@ def gaussian_jsme(
 
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
-    p = (
-        Popen(
-            [
-                "obabel",
-                "-ismi",
-                f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
-                "-oxyz",
-                f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
-                "--gen3d",
-            ],
-            stdout=PIPE,
-        )
-        .communicate()[0]
-        .decode("utf-8")
+    p = Popen(
+        [
+            "obabel",
+            "-ismi",
+            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
+            "-oxyz",
+            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
+            "--gen3d",
+        ],
+        stdout=PIPE,
     )
+
+    p.communicate()
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
