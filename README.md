@@ -8,6 +8,65 @@
 
 ## Pre-requisites
 
+## How to use
+
+Clone the repository
+
+```console
+git clone https://github.com/MrFlinxy/SKF-Interface.git
+```
+
+Create python virtual environment
+
+```console
+python3 -m venv skf_interface
+```
+
+Activate python virtual environment (Linux)
+
+```console
+source skf_interface/bin/activate
+```
+
+Install the required python packages from requirements.txt
+
+```console
+pip install -r requirements.txt
+```
+
+Creating .env file
+
+```console
+cd SKF-Interface; touch .env
+```
+
+Put the following into the .env file
+
+```
+cat > .env <<EOF
+# FIREBASE Configuration
+firebase_apiKey = "<apiKey>"
+firebase_authDomain = "<authDomain>"
+firebase_projectId = "<projectId>"
+firebase_storageBucket = "<storageBucker>"
+firebase_messagingSenderId = "<messagingSenderId>"
+firebase_appId = "<appId>"
+firebase_measurementId = "<measurementId>"
+firebase_databaseURL ="<databaseURL>"
+
+# FLASK Configuration
+secretKey = '<secretKey>'
+
+# Software paths
+orca_fullPath = '<orca_fullPath>'
+orca_cpus_per_job= '<orca_cpu>'
+gaussian_fullPath = '<gaussian_fullPath>'
+gaussian_cpus_per_job= '<gaussian_cpu>'
+GAUSS_EXEDIR='<GAUSS_EXEDIR>'
+GAUSS_SCRDIR='<GAUSS_SCRDIR>'
+EOF
+```
+
 ## Tech used for this project
 
 <div align="center">
@@ -69,62 +128,3 @@
 </p>
 <h2>・</h2>
 </div>
-
-## How to use
-
-Clone the repository
-
-```console
-git clone https://github.com/MrFlinxy/SKF-Interface.git
-```
-
-Create python virtual environment
-
-```console
-python3 -m venv skf_interface
-```
-
-Activate python virtual environment (Linux)
-
-```console
-source skf_interface/bin/activate
-```
-
-Install the required python packages from requirements.txt
-
-```console
-pip install -r requirements.txt
-```
-
-Creating .env file
-
-```console
-cd SKF-Interface; touch .env
-```
-
-Put the following into the .env file
-
-```
-cat > .env <<EOF
-# FIREBASE Configuration
-firebase_apiKey = "<apiKey>"
-firebase_authDomain = "<authDomain>"
-firebase_projectId = "<projectId>"
-firebase_storageBucket = "<storageBucker>"
-firebase_messagingSenderId = "<messagingSenderId>"
-firebase_appId = "<appId>"
-firebase_measurementId = "<measurementId>"
-firebase_databaseURL ="<databaseURL>"
-
-# FLASK Configuration
-secretKey = '<secretKey>'
-
-# Software paths
-orca_fullPath = '<orca_fullPath>'
-orca_cpus_per_job= '<orca_cpu>'
-gaussian_fullPath = '<gaussian_fullPath>'
-gaussian_cpus_per_job= '<gaussian_cpu>'
-GAUSS_EXEDIR='<GAUSS_EXEDIR>'
-GAUSS_SCRDIR='<GAUSS_SCRDIR>'
-EOF
-```
