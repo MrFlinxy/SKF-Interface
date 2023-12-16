@@ -27,7 +27,7 @@ touch .env
 
 put the following into the .env file
 
-```console
+```
 cat > .env <<EOF
 # FIREBASE Configuration
 firebase_apiKey = "<apiKey>"
