@@ -13,6 +13,7 @@ from .pyrebase_init import (
     update_verify_status_db,
     user_folder_name,
 )
+from .result import get_file_sizes
 from .sbatch import orca_submit, orca_jsme, gaussian_submit, gaussian_jsme
 
 
@@ -260,7 +261,8 @@ def result():
         user_folder = user_folder_name(session["user"], session["akun"])
         listdir_user_data = listdir(f"user_data/{user_folder}")
         if len(listdir_user_data) != 0:
-            return render_template("result.html", hasil=listdir_user_data)
+            result = get_file_sizes(f"./user_data/{user_folder}")
+            return render_template("result.html", hasil=result)
         else:
             return render_template(
                 "result.html", error="Tidak ada hasil Komputasi", show="."
@@ -275,14 +277,14 @@ def result_folder(folder_name):
         session["akun"] = extend_token(session["akun"])
         user_folder = user_folder_name(session["user"], session["akun"])
         folder = f"user_data/{user_folder}/{folder_name}"
-        result = listdir(folder)
+        result = get_file_sizes(folder)
         # Filtering
         res = []
         for i in result:
-            tmp = search("\.tmp$", i)
-            sh = search("\.sh$", i)
-            smi = search("\.smi$", i)
-            smix = search("_smi\.xyz$", i)
+            tmp = search("\.tmp$", i["fname"])
+            sh = search("\.sh$", i["fname"])
+            smi = search("\.smi$", i["fname"])
+            smix = search("_smi\.xyz$", i["fname"])
             if sh == None and tmp == None and smi == None and smix == None:
                 res.append(i)
         return render_template("result_files.html", hasil=res, nama_folder=folder_name)
