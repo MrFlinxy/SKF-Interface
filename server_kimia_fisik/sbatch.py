@@ -89,7 +89,7 @@ def orca_jsme(
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
 
-    Popen(
+    p = Popen(
         [
             "obabel",
             "-ismi",
@@ -99,6 +99,9 @@ def orca_jsme(
             "--gen3d",
         ]
     )
+
+    # Added p.communicate() to wait for the Popen process to finish
+    p.communicate()
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
@@ -230,7 +233,7 @@ def gaussian_jsme(
 
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
-    Popen(
+    p = Popen(
         [
             "obabel",
             "-ismi",
@@ -240,6 +243,9 @@ def gaussian_jsme(
             "--gen3d",
         ]
     )
+
+    # Added p.communicate() to wait for the Popen process to finish
+    p.communicate()
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
