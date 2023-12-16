@@ -19,6 +19,30 @@
 <h2>・</h2>
 
 <p>
+  <a href="https://flask.palletsprojects.com/">
+    <img alt="Flask Logo" src="./images/flask-logo.svg" width="50"><h3>Python Flask</h3>
+  </a>
+</p>
+<h2>・</h2>
+
+<p>
+  <a href="/">
+    <img alt="Gunicorn Logo" src="./images/gunicorn-logo.svg" width="50">
+  </a>
+  <a href="/">
+    <img alt="Nginx Logo" src="./images/nginx-logo.svg" width="50">
+  </a> <h3>Gunicorn・Nginx</h3>
+</p>
+<h2>・</h2>
+
+<p>
+  <a href="https://github.com/thisbejim/Pyrebase/">
+    <img alt="Pyrebase Logo" src="./images/pyrebase-logo.svg" width="50"><h3>Pyrebase</h3>
+  </a>
+</p>
+<h2>・</h2>
+
+<p>
   <a href="https://www.schedmd.com/">
     <img alt="Slurm Logo" src="./images/slurm-logo.png" width="50"><h3>Slurm Workload Manager</h3>
   </a>
@@ -38,6 +62,12 @@
 </p>
 <h2>・</h2>
 
+<p>
+  <a href="https://tailwindcss.com/">
+    <img alt="TailwindCSS Logo" src="./images/tailwindcss-logo.png" width="50"><h3>TailwindCSS</h3>
+  </a>
+</p>
+<h2>・</h2>
 </div>
 
 ## How to use
@@ -48,13 +78,31 @@ Clone the repository
 git clone https://github.com/MrFlinxy/SKF-Interface.git
 ```
 
+Create python virtual environment
+
+```console
+python3 -m venv skf_interface
+```
+
+Activate python virtual environment (Linux)
+
+```console
+source skf_interface/bin/activate
+```
+
+Install the required python packages from requirements.txt
+
+```console
+pip install -r requirements.txt
+```
+
 Creating .env file
 
 ```console
 cd SKF-Interface; touch .env
 ```
 
-put the following into the .env file
+Put the following into the .env file
 
 ```
 cat > .env <<EOF
