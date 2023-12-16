@@ -13,14 +13,14 @@
 <div align="center">
 <p>
   <a href="https://www.python.org/">
-    <img alt="Python Logo" src="./images/python-logo.svg" width="30">
-  </a> <h3>Python</h3>
+    <img alt="Python Logo" src="./images/python-logo.svg" width="30"><h3>Python</h3>
+  </a>
 </p>
 
 <p>
   <a href="https://www.schedmd.com/">
-    <img alt="Slurm Logo" src="./images/slurm-logo.png" width="30">
-  </a> <h3>Slurm Workload Manager</h3>
+    <img alt="Slurm Logo" src="./images/slurm-logo.png" width="30"><h3>Slurm Workload Manager</h3>
+  </a>
 </p>
 
 <p>
