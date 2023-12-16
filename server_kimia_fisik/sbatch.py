@@ -1,7 +1,7 @@
 from os import environ, getcwd, mkdir, path
 from dotenv import load_dotenv
 from re import sub
-from subprocess import Popen
+from subprocess import PIPE, Popen
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .pyrebase_init import user_folder_name
 
@@ -89,19 +89,21 @@ def orca_jsme(
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
 
-    p = Popen(
-        [
-            "obabel",
-            "-ismi",
-            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
-            "-oxyz",
-            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
-            "--gen3d",
-        ]
+    p = (
+        Popen(
+            [
+                "obabel",
+                "-ismi",
+                f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
+                "-oxyz",
+                f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
+                "--gen3d",
+            ],
+            stdout=PIPE,
+        )
+        .communicate()[0]
+        .decode("utf-8")
     )
-
-    # Added p.communicate() to wait for the Popen process to finish
-    p.communicate()
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
@@ -233,19 +235,21 @@ def gaussian_jsme(
 
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
-    p = Popen(
-        [
-            "obabel",
-            "-ismi",
-            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
-            "-oxyz",
-            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
-            "--gen3d",
-        ]
+    p = (
+        Popen(
+            [
+                "obabel",
+                "-ismi",
+                f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
+                "-oxyz",
+                f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
+                "--gen3d",
+            ],
+            stdout=PIPE,
+        )
+        .communicate()[0]
+        .decode("utf-8")
     )
-
-    # Added p.communicate() to wait for the Popen process to finish
-    p.communicate()
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
