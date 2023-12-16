@@ -13,29 +13,27 @@
 <div align="center">
 <p>
   <a href="https://www.python.org/">
-    <img alt="Python Logo" src="./images/python-logo.svg" width="30"><h3>Python</h3>
+    <img alt="Python Logo" src="./images/python-logo.svg" width="50"><h3>Python</h3>
   </a>
 </p>
 <h2>・</h2>
 
 <p>
   <a href="https://www.schedmd.com/">
-    <img alt="Slurm Logo" src="./images/slurm-logo.png" width="30"><h3>Slurm Workload Manager</h3>
+    <img alt="Slurm Logo" src="./images/slurm-logo.png" width="50"><h3>Slurm Workload Manager</h3>
   </a>
 </p>
 <h2>・</h2>
 
 <p>
   <a href="/">
-    <img alt="HTML Logo" src="./images/html-logo.svg" width="30">
+    <img alt="HTML Logo" src="./images/html-logo.svg" width="50">
   </a>
-  <h3>・</h3>
   <a href="/">
-    <img alt="CSS Logo" src="./images/css-logo.svg" width="30">
+    <img alt="CSS Logo" src="./images/css-logo.svg" width="50">
   </a>
-  <h3>・</h3>
   <a href="/">
-    <img alt="JS Logo" src="./images/javascript-logo.svg" width="30">
+    <img alt="JS Logo" src="./images/javascript-logo.svg" width="50">
   </a> <h3>HTML・CSS・JavaScript</h3>
 </p>
 <h2>・</h2>
