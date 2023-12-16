@@ -5,8 +5,8 @@
 <a href="https://orcaforum.kofo.mpg.de/">ORCA v5.0.4</a> | <a href="https://gaussian.com/">Gaussian 09</a> 
 </p>
 <h3>Contents</h3>
-<a href="https://github.com/MrFlinxy/SKF-Interface/tree/main?tab=readme-ov-file#pre-requisites">Pre-requisites</a>
-<a href="https://github.com/MrFlinxy/SKF-Interface/tree/main?tab=readme-ov-file#how-to-use">How to use</a>
+<a href="https://github.com/MrFlinxy/SKF-Interface/tree/main?tab=readme-ov-file#pre-requisites">Pre-requisites</a> <p>・</p>
+<a href="https://github.com/MrFlinxy/SKF-Interface/tree/main?tab=readme-ov-file#how-to-use">How to use</a> <p>・</p>
 <a href="https://github.com/MrFlinxy/SKF-Interface/tree/main?tab=readme-ov-file#tech-used-for-this-project">Tech used for this project</a>
 </div>
 
