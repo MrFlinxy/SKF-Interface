@@ -127,7 +127,7 @@ EOF
 
 <p>
   <a href="https://tailwindcss.com/">
-    <img alt="TailwindCSS Logo" src="./images/tailwindcss-logo.png" width="50"><h3>TailwindCSS</h3>
+    <img alt="TailwindCSS Logo" src="./images/tailwindcss-logo.svg" width="50"><h3>TailwindCSS</h3>
   </a>
 </p>
 <h2>・</h2>
