@@ -131,4 +131,11 @@ EOF
   </a>
 </p>
 <h2>・</h2>
+
+<p>
+  <a href="https://jsme-editor.github.io/">
+    <h3>JSME Molecule Editor</h3>
+  </a>
+</p>
+<h2>・</h2>
 </div>
