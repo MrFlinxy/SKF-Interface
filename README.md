@@ -29,9 +29,11 @@
   <a href="/">
     <img alt="HTML Logo" src="./images/html-logo.svg" width="30">
   </a>
+  <h3>・</h3>
   <a href="/">
     <img alt="CSS Logo" src="./images/css-logo.svg" width="30">
   </a>
+  <h3>・</h3>
   <a href="/">
     <img alt="JS Logo" src="./images/javascript-logo.svg" width="30">
   </a> <h3>HTML・CSS・JavaScript</h3>
