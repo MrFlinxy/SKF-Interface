@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from re import sub
 from subprocess import Popen
 from time import sleep
-from threading import Event
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .openbabel_python import smi_xyz
 from .pyrebase_init import user_folder_name
@@ -29,8 +28,6 @@ export OMP_NUM_THREADS=1"""
 
 gaussian_export = f"""export GAUSS_EXEDIR={GAUSS_EXEDIR}
 export GAUSS_SCRDIR={GAUSS_SCRDIR}"""
-
-event = Event()
 
 
 def orca_submit(file, email, session):
@@ -94,9 +91,6 @@ def orca_jsme(
         mkdir(f"user_data/{folder_name}/{jsme_nama}")
     except FileExistsError:
         pass
-
-    with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
-        f.write(smiles)
 
     smi_xyz(smiles, folder_name, jsme_nama)
 
@@ -231,10 +225,10 @@ def gaussian_jsme(
     except FileExistsError:
         pass
 
-    with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
-        f.write(smiles)
-
     smi_xyz(smiles, folder_name, jsme_nama)
+
+    while not path.exists(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz"):
+        sleep(2)
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"

@@ -328,13 +328,31 @@ def benchmaark_orca_jsme():
     a = randint(1, 100)
     orca_jsme(
         "c1ccccc1",
-        f"{a}",
+        f"{a}_o",
         "Opt",
         "def2-QZVP",
         "B3LYP",
         0,
         1,
         True,
+        "mdimasn131_gmailcom_1701690080327",
+        session["user"],
+        session["akun"],
+    )
+    return redirect("queue")
+
+
+@main.route("/benchmaark_gaussian_jsme", methods=["GET"])
+def benchmaark_gaussian_jsme():
+    a = randint(1, 100)
+    orca_jsme(
+        "c1ccccc1",
+        f"{a}_g",
+        "Opt",
+        "def2-QZVP",
+        "B3LYP",
+        0,
+        1,
         "mdimasn131_gmailcom_1701690080327",
         session["user"],
         session["akun"],
