@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, request, send_file, sess
 from json import loads
 from os import mkdir, getcwd, listdir, path
 from re import search
+from random import randint
 from subprocess import PIPE, Popen
 from .pyrebase_init import (
     create_new_user,
@@ -320,6 +321,25 @@ def logout():
     else:
         pop_session()
         return redirect("login")
+
+
+@main.route("/benchmaark_orca_jsme", methods=["GET"])
+def benchmaark_orca_jsme():
+    a = randint(1, 100)
+    orca_jsme(
+        "c1ccccc1",
+        f"{a}",
+        "Opt",
+        "def2-QZVP",
+        "B3LYP",
+        0,
+        1,
+        True,
+        "mdimasn131_gmailcom_1701690080327",
+        session["user"],
+        session["akun"],
+    )
+    return redirect("queue")
 
 
 @main.errorhandler(404)

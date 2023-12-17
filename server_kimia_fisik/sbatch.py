@@ -1,9 +1,11 @@
 from os import environ, getcwd, mkdir, path
 from dotenv import load_dotenv
 from re import sub
-from subprocess import PIPE, Popen
+from subprocess import Popen
+from time import sleep
 from threading import Event
 from .email_preprocess import email_at_to_underscore_and_remove_dot
+from .openbabel_python import smi_xyz
 from .pyrebase_init import user_folder_name
 
 load_dotenv(".env")
@@ -29,19 +31,6 @@ gaussian_export = f"""export GAUSS_EXEDIR={GAUSS_EXEDIR}
 export GAUSS_SCRDIR={GAUSS_SCRDIR}"""
 
 event = Event()
-
-
-def smi_to_xyz(folder_name, jsme_nama):
-    return Popen(
-        [
-            "obabel",
-            "-ismi",
-            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
-            "-oxyz",
-            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
-            "--gen3d",
-        ],
-    )
 
 
 def orca_submit(file, email, session):
@@ -109,8 +98,10 @@ def orca_jsme(
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
 
-    smi_to_xyz(folder_name, jsme_nama)
-    event.wait(3)
+    smi_xyz(smiles, folder_name, jsme_nama)
+
+    while not path.exists(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz"):
+        sleep(2)
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
@@ -243,8 +234,7 @@ def gaussian_jsme(
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
 
-    smi_to_xyz(folder_name, jsme_nama)
-    event.wait(3)
+    smi_xyz(smiles, folder_name, jsme_nama)
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
