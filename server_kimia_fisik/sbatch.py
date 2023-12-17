@@ -62,7 +62,7 @@ def orca_submit(file, email, session):
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    Popen(
+    return Popen(
         [
             "sbatch",
             "--output=/dev/null",
@@ -156,7 +156,7 @@ end
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    Popen(
+    return Popen(
         [
             "sbatch",
             "--output=/dev/null",
@@ -208,7 +208,7 @@ def gaussian_submit(file, email, session):
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    Popen(
+    return Popen(
         [
             "sbatch",
             "--output=/dev/null",
@@ -289,7 +289,7 @@ def gaussian_jsme(
         sbatch.write(sbatch_content)
 
     # Running sbatch
-    Popen(
+    return Popen(
         [
             "sbatch",
             "--output=/dev/null",
