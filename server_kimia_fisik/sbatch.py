@@ -42,7 +42,7 @@ def smi_to_xyz(folder_name, jsme_nama):
             "--gen3d",
         ],
         stdout=PIPE,
-    )
+    ).communicate()
 
 
 def orca_submit(file, email, session):
