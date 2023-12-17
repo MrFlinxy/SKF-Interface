@@ -2,6 +2,7 @@ from os import environ, getcwd, mkdir, path
 from dotenv import load_dotenv
 from re import sub
 from subprocess import PIPE, Popen
+from threading import Event
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .pyrebase_init import user_folder_name
 
@@ -26,6 +27,8 @@ export OMP_NUM_THREADS=1"""
 
 gaussian_export = f"""export GAUSS_EXEDIR={GAUSS_EXEDIR}
 export GAUSS_SCRDIR={GAUSS_SCRDIR}"""
+
+event = Event()
 
 
 def smi_to_xyz(folder_name, jsme_nama):
@@ -108,6 +111,7 @@ def orca_jsme(
         f.write(smiles)
 
     smi_to_xyz(folder_name, jsme_nama)
+    event.wait(3)
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
@@ -241,6 +245,7 @@ def gaussian_jsme(
         f.write(smiles)
 
     smi_to_xyz(folder_name, jsme_nama)
+    event.wait(3)
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
