@@ -41,8 +41,7 @@ def smi_to_xyz(folder_name, jsme_nama):
             f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
             "--gen3d",
         ],
-        stdout=PIPE,
-    ).communicate()
+    )
 
 
 def orca_submit(file, email, session):
