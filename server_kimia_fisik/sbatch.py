@@ -28,6 +28,20 @@ gaussian_export = f"""export GAUSS_EXEDIR={GAUSS_EXEDIR}
 export GAUSS_SCRDIR={GAUSS_SCRDIR}"""
 
 
+def smi_to_xyz(folder_name, jsme_nama):
+    return Popen(
+        [
+            "obabel",
+            "-ismi",
+            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
+            "-oxyz",
+            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
+            "--gen3d",
+        ],
+        stdout=PIPE,
+    )
+
+
 def orca_submit(file, email, session):
     # Upload file
     filename = file.filename
@@ -93,19 +107,7 @@ def orca_jsme(
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
 
-    p = Popen(
-        [
-            "obabel",
-            "-ismi",
-            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
-            "-oxyz",
-            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
-            "--gen3d",
-        ],
-        stdout=PIPE,
-    )
-
-    p.communicate()
+    smi_to_xyz(folder_name, jsme_nama)
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
@@ -237,19 +239,8 @@ def gaussian_jsme(
 
     with open(f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi", "w") as f:
         f.write(smiles)
-    p = Popen(
-        [
-            "obabel",
-            "-ismi",
-            f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}.smi",
-            "-oxyz",
-            f"-Ouser_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz",
-            "--gen3d",
-        ],
-        stdout=PIPE,
-    )
 
-    p.communicate()
+    smi_to_xyz(folder_name, jsme_nama)
 
     with open(
         f"user_data/{folder_name}/{jsme_nama}/{jsme_nama}_smi.xyz", "r"
