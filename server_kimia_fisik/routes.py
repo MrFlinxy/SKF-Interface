@@ -345,7 +345,7 @@ def benchmaark_orca_jsme():
 @main.route("/benchmaark_gaussian_jsme", methods=["GET"])
 def benchmaark_gaussian_jsme():
     a = randint(1, 100)
-    orca_jsme(
+    gaussian_jsme(
         "c1ccccc1",
         f"{a}_g",
         "Opt",
