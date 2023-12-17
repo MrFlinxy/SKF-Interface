@@ -348,8 +348,8 @@ def benchmaark_gaussian_jsme():
     gaussian_jsme(
         "c1ccccc1",
         f"{a}_g",
-        "Opt",
-        "def2-QZVP",
+        "opt",
+        "6-31G",
         "B3LYP",
         0,
         1,
