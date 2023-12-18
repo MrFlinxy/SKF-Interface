@@ -63,7 +63,7 @@
         <div class="flex items-start pt-2">
           <div class="flex h-5 items-center">
             <label for="name_file" class="mr-3 ms-2 font-roboto text-sm font-semibold"> Nama file </label>
-            <input id="name_file" type="text" value="" name="name_file" class="focus:ring-3 w-[200px] rounded border border-gray-300 bg-gray-50 pl-2 focus:ring-blue-300" required />
+            <input id="name_file" type="text" value="" name="name_file" class="focus:ring-3 w-[200px] rounded border border-gray-300 bg-gray-50 pl-2 focus:ring-blue-300" required pattern="[a-zA-Z0-9\s]+" />
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@
         <div class="flex items-start pt-2">
           <div class="flex h-5 items-center">
             <label for="muatan" class="mr-3 ms-2 font-roboto text-sm font-semibold"> Muatan </label>
-            <input id="muatan" type="number" value="0" name="muatan" class="focus:ring-3 w-[200px] rounded border border-gray-300 bg-gray-50 pl-2 focus:ring-blue-300" required />
+            <input id="muatan" type="number" value="0" name="muatan" class="focus:ring-3 w-[200px] rounded border border-gray-300 bg-gray-50 pl-2 focus:ring-blue-300" required pattern="[0-9]" />
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@
         <div class="flex items-start pt-2">
           <div class="flex h-5 items-center">
             <label for="multiplisitas" class="mr-3 ms-2 font-roboto text-sm font-semibold"> Multiplisitas </label>
-            <input id="multiplisitas" type="number" value="1" name="multiplisitas" class="focus:ring-3 w-[200px] rounded border border-gray-300 bg-gray-50 pl-2 focus:ring-blue-300" required />
+            <input id="multiplisitas" type="number" value="1" name="multiplisitas" class="focus:ring-3 w-[200px] rounded border border-gray-300 bg-gray-50 pl-2 focus:ring-blue-300" required pattern="[0-9]" />
           </div>
         </div>
       </div>
