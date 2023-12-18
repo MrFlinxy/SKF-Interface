@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, request, send_file, session
 from json import loads
-from os import mkdir, getcwd, listdir, path
+from os import getcwd, listdir, path
+from pathlib import Path
 from re import search
 from random import randint
 from subprocess import PIPE, Popen
@@ -55,8 +56,7 @@ def login():
                 )
                 try:
                     try:
-                        mkdir(folder_path)
-                        mkdir(user_folder)
+                        Path(user_folder).mkdir(mode=0o777, parents=True, exist_ok=True)
                     except OSError:
                         pass
                     return redirect("home")
