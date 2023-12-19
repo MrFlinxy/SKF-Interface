@@ -228,6 +228,14 @@
   </footer>
   <script type="text/javascript" src="{{ url_for('static', filename='dist/js/jsme/jsme.nocache.js') }}"></script>
   <script>
+    const input = document.getElementById("name_file");
+    const regex = new RegExp("^[a-zA-Z0-9]*$");
+
+    input.addEventListener("beforeinput", (event) => {
+      if (event.data != null && !regex.test(event.data)) event.preventDefault();
+    });
+  </script>
+  <script>
     function sendData() {
       var data = document.jsapplets[0].smiles();
       var name_file = $("#name_file").val();
