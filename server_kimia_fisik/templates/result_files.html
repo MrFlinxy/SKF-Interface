@@ -55,6 +55,16 @@
   <body class="grid place-items-center bg-background">
     <div class="grid max-w-2xl place-items-center rounded-lg bg-white px-10 py-6 shadow md:mt-0 md:max-w-3xl md:px-20 lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl">
       <div class="text-center font-poppins text-2xl font-bold md:text-3xl lg:text-4xl">Hasil Perhitungan Komputasi</div>
+
+      <div class="pt-6">
+        <h2 class="grid font-semibold text-xl place-items-center pb-2">
+          Last 10 Lines of <span><a class="text-blue-500 text-3xl" href="/download/{{nama_folder}}/{{nama_folder}}.out">{{nama_folder}}.out</a></span>
+        </h2>
+        <h2 class="grid font-semibold text-xl place-items-center pb-2">. . .</h2>
+        {% for i in tail %}
+        <p class="grid place-items-start">{{ i }}</p>
+        {% endfor %}
+      </div>
       <hr class="mx-auto my-4 h-1 w-48 rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-6" />
       {% for i in show %}
       <div class="py-52 text-center font-roboto text-2xl font-bold text-slate-300">

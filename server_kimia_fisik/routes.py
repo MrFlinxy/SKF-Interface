@@ -278,6 +278,9 @@ def result_folder(folder_name):
         session["akun"] = extend_token(session["akun"])
         user_folder = user_folder_name(session["user"], session["akun"])
         folder = f"user_data/{user_folder}/{folder_name}"
+        with open(f"user_data/{user_folder}/{folder_name}/{folder_name}.out", "r") as f:
+            a = f.readlines()
+            tail_file = [i for i in a[-12:]]
         result = get_file_sizes(folder)
         # Filtering
         res = []
@@ -288,7 +291,12 @@ def result_folder(folder_name):
             smix = search("_smi\.xyz$", i["fname"])
             if sh == None and tmp == None and smi == None and smix == None:
                 res.append(i)
-        return render_template("result_files.html", hasil=res, nama_folder=folder_name)
+        return render_template(
+            "result_files.html",
+            hasil=res,
+            nama_folder=folder_name,
+            tail=tail_file,
+        )
     else:
         return redirect("login")
 
