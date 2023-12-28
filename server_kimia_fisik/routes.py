@@ -331,43 +331,6 @@ def logout():
         return redirect("login")
 
 
-@main.route("/benchmaark_orca_jsme", methods=["GET"])
-def benchmaark_orca_jsme():
-    a = randint(1, 100)
-    orca_jsme(
-        "c1ccccc1",
-        f"{a}_o",
-        "Opt",
-        "def2-QZVP",
-        "B3LYP",
-        0,
-        1,
-        True,
-        "mdimasn131_gmailcom_1701690080327",
-        session["user"],
-        session["akun"],
-    )
-    return redirect("queue")
-
-
-@main.route("/benchmaark_gaussian_jsme", methods=["GET"])
-def benchmaark_gaussian_jsme():
-    a = randint(1, 100)
-    gaussian_jsme(
-        "c1ccccc1",
-        f"{a}_g",
-        "opt",
-        "6-31G",
-        "B3LYP",
-        0,
-        1,
-        "mdimasn131_gmailcom_1701690080327",
-        session["user"],
-        session["akun"],
-    )
-    return redirect("queue")
-
-
 @main.errorhandler(404)
 def page_not_exist(e):
     return redirect("/")
