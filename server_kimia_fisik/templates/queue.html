@@ -52,7 +52,7 @@
     </div>
   </nav>
 
-  <body class="grid place-items-center bg-background">
+  <body class="grid place-items-center bg-background mb-12 md:mb-20">
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table class="w-full text-left text-sm text-gray-500 rtl:text-right">
         <thead class="bg-gray-50 text-xs uppercase text-gray-700">
@@ -78,6 +78,10 @@
     <div class="pt-4 text-xl">{{message}}</div>
   </body>
 
+  <footer class="fixed bottom-0 left-0 z-20 w-full grid grid-cols-2 border-t border-gray-200 bg-white shadow dark:border-gray-600 dark:bg-gray-800 md:flex md:items-center md:justify-between md:p-6 md:invisible">
+    <button class="bg-secondary p-3 ml-1 text-center rounded-l-md font-bold border-r-2 border-slate-300" onclick="location.href = '/submit/menu'">Submit</button>
+    <button class="bg-secondary p-3 mr-1 text-center rounded-r-md font-bold border-l-2 border-slate-300" onclick="location.href = '/result'">Hasil</button>
+  </footer>
   <footer class="invisible fixed bottom-0 left-0 z-20 w-full border-t border-gray-200 bg-white p-4 shadow dark:border-gray-600 dark:bg-gray-800 md:flex md:items-center md:justify-between md:p-6 lg:visible">
     <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
       © 2023

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title>Submit Gaussian | SKF</title>
+    <title>Gaussian 09W | SKF</title>
     <link rel="stylesheet" href="../static/dist/css/output.css" />
   </head>
   <nav class="w-screen border-gray-200 bg-background">
@@ -181,7 +181,7 @@
       </a>
       <!-- JSME Button End -->
     </div>
-    <div class="pb-[52px] pt-6">
+    <div class="pb-[52px] mb-12 md:mb-20 pt-6">
       <div class="grid max-w-md place-items-center rounded-lg bg-white px-10 pt-6 shadow md:mt-0 md:px-20">
         <!-- Submit text -->
         <div id="submit-text" class="pb-4 font-poppins text-2xl font-medium">Upload File Input Gaussian</div>
@@ -215,6 +215,10 @@
     </div>
   </body>
 
+  <footer class="fixed bottom-0 left-0 z-20 w-full grid grid-cols-2 border-t border-gray-200 bg-white shadow dark:border-gray-600 dark:bg-gray-800 md:flex md:items-center md:justify-between md:p-6 md:invisible">
+    <button class="bg-secondary p-3 ml-1 text-center rounded-l-md font-bold border-r-2 border-slate-300" onclick="location.href = '/queue'">Antrian</button>
+    <button class="bg-secondary p-3 mr-1 text-center rounded-r-md font-bold border-l-2 border-slate-300" onclick="location.href = '/result'">Hasil</button>
+  </footer>
   <footer class="invisible fixed bottom-0 left-0 z-20 w-full border-t border-gray-200 bg-white p-4 shadow dark:border-gray-600 dark:bg-gray-800 md:flex md:items-center md:justify-between md:p-6 lg:visible">
     <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
       © 2023
