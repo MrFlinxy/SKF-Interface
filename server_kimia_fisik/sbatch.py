@@ -1,6 +1,6 @@
 from os import environ, getcwd, mkdir, path
 from dotenv import load_dotenv
-from re import sub
+from re import sub, IGNORECASE
 from subprocess import Popen
 from time import sleep
 from .email_preprocess import email_at_to_underscore_and_remove_dot
@@ -46,8 +46,10 @@ def orca_submit(file, email, session):
     new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
     with open(new_file, "w") as f:
         for line in open(str(file_edit), "r").readlines():
-            line = sub(r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line)
-            line = sub(r"%maxcore.+", r"%maxcore 2048", line)
+            line = sub(
+                r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line, flags=IGNORECASE
+            )
+            line = sub(r"%maxcore.+", r"%maxcore 2048", line, flags=IGNORECASE)
             f.write(line)
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
@@ -172,8 +174,10 @@ def orca_nebts_submit(file, email, session):
     new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
     with open(new_file, "w") as f:
         for line in open(str(file_edit), "r").readlines():
-            line = sub(r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line)
-            line = sub(r"%maxcore.+", r"%maxcore 2048", line)
+            line = sub(
+                r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line, flags=IGNORECASE
+            )
+            line = sub(r"%maxcore.+", r"%maxcore 2048", line, flags=IGNORECASE)
             f.write(line)
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])

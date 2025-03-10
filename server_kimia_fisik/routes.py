@@ -240,7 +240,7 @@ def queue():
                 # Extracting the data from json
                 job_name = data["jobs"][i]["name"][:-3]
                 job_status = data["jobs"][i]["job_state"]
-                job_submit_time = data["jobs"][i]["submit_time"]
+                job_submit_time = data["jobs"][i]["submit_time"]["number"]
 
                 # Converting the data into human-readable format
                 job_submit_time_hms = datetime.fromtimestamp(job_submit_time).strftime(
