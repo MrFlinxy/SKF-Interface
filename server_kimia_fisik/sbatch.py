@@ -156,6 +156,50 @@ end
     )
 
 
+def orca_nebts_submit(file, email, session):
+    # Upload file
+    filename = file.filename
+    folder_path = path.join(getcwd(), "user_data")
+    user_folder = path.join(folder_path, user_folder_name(email, session))
+    try:
+        file_folder = path.join(user_folder, filename[:-4])
+        mkdir(file_folder)
+    except FileExistsError:
+        pass
+    file.save(path.join(file_folder, filename))
+    # File content edit
+    file_edit = path.join(file_folder, filename)
+    new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
+    with open(new_file, "w") as f:
+        for line in open(str(file_edit), "r").readlines():
+            line = sub(r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line)
+            line = sub(r"%maxcore.+", r"%maxcore 2048", line)
+            f.write(line)
+    # Creating sbatch contents
+    file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
+    orca_cmd = f"{orca_full_path} {file_path}/{filename[:-4]}_.inp > {file_path}/{filename[:-4]}.out --oversubscribe"
+    sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
+
+    # Creating sbatch shell script file
+    folder_name = user_folder_name(email, session)
+    email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
+    with open(
+        f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
+        "w",
+    ) as sbatch:
+        sbatch.write(sbatch_content)
+
+    # Running sbatch
+    return Popen(
+        [
+            "sbatch",
+            "--output=/dev/null",
+            "--error=/dev/null",
+            f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
+        ]
+    )
+
+
 def gaussian_submit(file, email, session):
     # Upload file
     filename = file.filename

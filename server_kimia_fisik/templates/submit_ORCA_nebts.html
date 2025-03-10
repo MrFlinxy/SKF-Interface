@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Software Menu | SKF</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>ORCA v6.0.1 NEB-TS | SKF</title>
     <link rel="stylesheet" href="../static/dist/css/output.css" />
   </head>
   <nav class="w-screen border-gray-200 bg-background">
@@ -52,44 +53,15 @@
     </div>
   </nav>
 
-  <body class="grid place-items-center mb-12 md:mb-20 bg-background">
-    <button class="mb-2 mt-6 w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow hover:bg-slate-200 dark:border-gray-700 dark:bg-gray-800" onclick="location.href = '/submit/ORCA'">
-      <div>
-        <div class="px-5 py-5">
-          <div class="grid place-items-center">
-            <img src="{{url_for('static',filename='dist/img/ORCA_logo.png')}}" alt="ORCA_LOGO" class="h-[200px] pb-6" />
-          </div>
-          <h5 class="text-center text-xl font-semibold tracking-tight text-gray-900 dark:text-white">ORCA v6.0.1</h5>
-        </div>
-      </div>
-    </button>
-    <button class="mb-2 mt-6 w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow hover:bg-slate-200 dark:border-gray-700 dark:bg-gray-800" onclick="location.href = '/submit/ORCA_NEBTS'">
-      <div>
-        <div class="px-5 py-5">
-          <div class="grid place-items-center">
-            <img src="{{url_for('static',filename='dist/img/ORCA_logo.png')}}" alt="ORCA_LOGO" class="h-[200px] pb-6" />
-          </div>
-          <h5 class="text-center text-xl font-semibold tracking-tight text-gray-900 dark:text-white">ORCA v6.0.1 NEB-TS</h5>
-        </div>
-      </div>
-    </button>
-    <button class="mb-2 mt-6 w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow hover:bg-slate-200 dark:border-gray-700 dark:bg-gray-800" onclick="location.href = '/submit/Gaussian'">
-      <div>
-        <div class="px-5 py-5">
-          <div class="grid place-items-center">
-            <img src="{{url_for('static',filename='dist/img/gaussian_logo.png')}}" alt="Gaussian_LOGO" class="h-[200px] pb-6" />
-          </div>
-          <h5 class="text-center text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Gaussian 09W</h5>
-        </div>
-      </div>
-    </button>
+  <body class="grid place-items-center bg-background">
+    <div class="grid place-items-center rounded-lg bg-white p-3 shadow">ORCA_NEBTS - Work In Progres</div>
   </body>
 
   <footer class="fixed bottom-0 left-0 z-20 w-full grid grid-cols-2 border-t border-gray-200 bg-white shadow dark:border-gray-600 dark:bg-gray-800 md:flex md:items-center md:justify-between md:p-6 md:invisible">
     <button class="bg-secondary p-3 ml-1 text-center rounded-l-md font-bold border-r-2 border-slate-300" onclick="location.href = '/queue'">Antrian</button>
     <button class="bg-secondary p-3 mr-1 text-center rounded-r-md font-bold border-l-2 border-slate-300" onclick="location.href = '/result'">Hasil</button>
   </footer>
-  <footer class="invisible fixed bottom-0 left-0 z-20 w-full border-t border-gray-200 bg-white p-4 shadow dark:border-gray-600 dark:bg-gray-800 md:flex md:items-center md:justify-between md:p-6 md:visible lg:visible">
+  <footer class="invisible fixed bottom-0 left-0 z-20 w-full border-t border-gray-200 bg-white p-4 shadow dark:border-gray-600 dark:bg-gray-800 md:flex md:items-center md:justify-between md:p-6 lg:visible">
     <span class="text-sm text-gray-500 dark:text-gray-400 sm:text-center">
       © 2023
       <a href="/" class="hover:underline"> Lab. Kimia Fisik - Universitas Padjadjaran </a>

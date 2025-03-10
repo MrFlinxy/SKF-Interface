@@ -16,7 +16,13 @@ from .pyrebase_init import (
     user_folder_name,
 )
 from .result import get_file_sizes
-from .sbatch import orca_submit, orca_jsme, gaussian_submit, gaussian_jsme
+from .sbatch import (
+    orca_submit,
+    orca_jsme,
+    orca_nebts_submit,
+    gaussian_submit,
+    gaussian_jsme,
+)
 
 
 main = Blueprint("main", __name__)
@@ -126,6 +132,17 @@ def submit(software):
         if request.method == "POST" and software == "ORCA":
             orca_submit(
                 request.files["file"],
+                session["user"],
+                session["akun"],
+            )
+            return redirect("ORCA")
+
+        if request.method == "GET" and software == "ORCA_NEBTS":
+            return render_template("submit_ORCA_nebts.html")
+        if request.method == "POST" and software == "ORCA_NEBTS":
+            orca_nebts_submit(
+                request.files["file_reaktan"],
+                request.files["file_produk"],
                 session["user"],
                 session["akun"],
             )
