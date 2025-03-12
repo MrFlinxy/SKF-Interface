@@ -200,20 +200,12 @@ def orca_nebts_submit(
 end
 
 %NEB 
- NEB_END_XYZFILE "{filename_product}" 
+ NEB_END_XYZFILE "{path.join(user_folder, calculation_name, file_product)}" 
 END
 
-* XYZFILE {muatan} {multiplisitas} {filename_reactant} *
+* XYZFILE {muatan} {multiplisitas} {path.join(user_folder, calculation_name, file_reactant)} *
 """
-    # print(orca_nebts_inp)
-
-    # with open(new_file, "w") as f:
-    #     for line in open(str(file_edit), "r").readlines():
-    #         line = sub(
-    #             r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line, flags=IGNORECASE
-    #         )
-    #         line = sub(r"%maxcore.+", r"%maxcore 2048", line, flags=IGNORECASE)
-    #         f.write(line)
+    print(orca_nebts_inp)
     with open(new_file, "w") as f:
         f.write(orca_nebts_inp)
 
