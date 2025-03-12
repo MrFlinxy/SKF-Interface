@@ -7,6 +7,7 @@ from pathlib import Path
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .openbabel_python import smi_xyz
 from .pyrebase_init import user_folder_name
+from werkzeug.utils import secure_filename
 
 load_dotenv(".env")
 
@@ -171,8 +172,8 @@ def orca_nebts_submit(
     multiplisitas,
 ):
     # Upload file
-    filename_reactant = file_reactant.filename
-    filename_product = file_product.filename
+    filename_reactant = secure_filename(file_reactant.filename)
+    filename_product = secure_filename(file_product.filename)
     folder_path = path.join(getcwd(), "user_data")
     user_folder = path.join(folder_path, user_folder_name(email, session))
 
@@ -184,9 +185,6 @@ def orca_nebts_submit(
 
     file_reactant.save(path.join(file_folder, filename_reactant))
     file_product.save(path.join(file_folder, filename_product))
-    # File content edit
-    # file_reactant_edit = path.join(file_folder, filename_reactant)
-    # file_product_edit = path.join(file_folder, filename_product)
     new_file = path.join(file_folder, f"{calculation_name}.inp")
 
     orca_nebts_inp = f"""# Input File Orca NEB-TS | Server Kimia Fisik
