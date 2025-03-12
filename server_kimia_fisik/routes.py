@@ -141,12 +141,17 @@ def submit(software):
             return render_template("submit_ORCA_nebts.html")
         if request.method == "POST" and software == "ORCA_NEBTS":
             orca_nebts_submit(
-                request.files["file_reaktan"],
-                request.files["file_produk"],
+                request.files["file_reactant"],
+                request.files["file_product"],
+                request.form.get("name_file"),
                 session["user"],
                 session["akun"],
+                request.form.get("teori"),
+                request.form.get("basis_set"),
+                request.form.get("muatan"),
+                request.form.get("multiplisitas"),
             )
-            return redirect("ORCA")
+            return redirect("ORCA_NEBTS")
 
         if request.method == "GET" and software == "Gaussian":
             return render_template("submit_Gaussian.html")

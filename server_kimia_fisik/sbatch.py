@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from re import sub, IGNORECASE
 from subprocess import Popen
 from time import sleep
+from pathlib import Path
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .openbabel_python import smi_xyz
 from .pyrebase_init import user_folder_name
@@ -158,38 +159,78 @@ end
     )
 
 
-def orca_nebts_submit(file, email, session):
+def orca_nebts_submit(
+    file_reactant,
+    file_product,
+    calculation_name,
+    email,
+    session,
+    teori,
+    basis_set,
+    muatan,
+    multiplisitas,
+):
     # Upload file
-    filename = file.filename
+    filename_reactant = file_reactant.filename
+    filename_product = file_product.filename
     folder_path = path.join(getcwd(), "user_data")
     user_folder = path.join(folder_path, user_folder_name(email, session))
+
     try:
-        file_folder = path.join(user_folder, filename[:-4])
+        file_folder = path.join(user_folder, calculation_name)
         mkdir(file_folder)
     except FileExistsError:
         pass
-    file.save(path.join(file_folder, filename))
+
+    file_reactant.save(path.join(file_folder, filename_reactant))
+    file_product.save(path.join(file_folder, filename_product))
     # File content edit
-    file_edit = path.join(file_folder, filename)
-    new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
+    # file_reactant_edit = path.join(file_folder, filename_reactant)
+    # file_product_edit = path.join(file_folder, filename_product)
+    new_file = path.join(file_folder, f"{calculation_name}.inp")
+
+    orca_nebts_inp = f"""# Input File Orca NEB-TS | Server Kimia Fisik
+#
+! NEB-TS FREQ {teori} {basis_set} 
+
+%maxcore 2048
+
+%pal
+   nprocs 4
+end
+
+%NEB 
+ NEB_END_XYZFILE "{filename_product}" 
+END
+
+* XYZFILE {muatan} {multiplisitas} {filename_reactant}
+"""
+    # print(orca_nebts_inp)
+
+    # with open(new_file, "w") as f:
+    #     for line in open(str(file_edit), "r").readlines():
+    #         line = sub(
+    #             r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line, flags=IGNORECASE
+    #         )
+    #         line = sub(r"%maxcore.+", r"%maxcore 2048", line, flags=IGNORECASE)
+    #         f.write(line)
     with open(new_file, "w") as f:
-        for line in open(str(file_edit), "r").readlines():
-            line = sub(
-                r"nprocs.+", rf"nprocs {orca_cpus_per_job}", line, flags=IGNORECASE
-            )
-            line = sub(r"%maxcore.+", r"%maxcore 2048", line, flags=IGNORECASE)
-            f.write(line)
+        f.write(orca_nebts_inp)
+
     # Creating sbatch contents
-    file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
-    orca_cmd = f"{orca_full_path} {file_path}/{filename[:-4]}_.inp > {file_path}/{filename[:-4]}.out --oversubscribe"
+    file_path = path.join(
+        folder_path, user_folder_name(email, session), calculation_name
+    )
+    orca_cmd = f"{orca_full_path} {file_path}/{calculation_name}.inp > {file_path}/{calculation_name}.out --oversubscribe"
     sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
 
     # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)
     email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
+
     with open(
-        f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
-        "w",
+        Path(f"user_data/{folder_name}/{calculation_name}/{email_sbatch}***.sh"),
+        "w+",
     ) as sbatch:
         sbatch.write(sbatch_content)
 
@@ -199,7 +240,7 @@ def orca_nebts_submit(file, email, session):
             "sbatch",
             "--output=/dev/null",
             "--error=/dev/null",
-            f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
+            f"user_data/{folder_name}/{calculation_name}/{email_sbatch}***.sh",
         ]
     )
 
