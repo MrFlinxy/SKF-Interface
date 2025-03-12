@@ -200,10 +200,10 @@ def orca_nebts_submit(
 end
 
 %NEB 
- NEB_END_XYZFILE "{path.join(user_folder, calculation_name)}/{file_product}" 
+ NEB_END_XYZFILE "{path.join(user_folder, calculation_name)}/{filename_product}" 
 END
 
-* XYZFILE {muatan} {multiplisitas} {path.join(user_folder, calculation_name)}/{file_reactant} *
+* XYZFILE {muatan} {multiplisitas} {path.join(user_folder, calculation_name)}/{filename_reactant} *
 """
     print(orca_nebts_inp)
     with open(new_file, "w") as f:
