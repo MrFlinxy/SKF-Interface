@@ -203,7 +203,7 @@ end
  NEB_END_XYZFILE "{filename_product}" 
 END
 
-* XYZFILE {muatan} {multiplisitas} {filename_reactant}
+* XYZFILE {muatan} {multiplisitas} {filename_reactant} *
 """
     # print(orca_nebts_inp)
 
