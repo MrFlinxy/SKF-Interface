@@ -244,7 +244,7 @@ def queue():
             for i in range(len(data["jobs"])):
                 # Extracting the data from json
                 job_name = data["jobs"][i]["name"][:-3]
-                job_status = data["jobs"][i]["job_state"]
+                job_status = data["jobs"][i]["job_state"][0]
                 job_submit_time = data["jobs"][i]["submit_time"]["number"]
 
                 # Converting the data into human-readable format
