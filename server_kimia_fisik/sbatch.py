@@ -1,6 +1,7 @@
 from os import environ, getcwd, mkdir, path
+from sre_parse import FLAGS
 from dotenv import load_dotenv
-from re import sub, IGNORECASE
+from re import I, sub, IGNORECASE
 from subprocess import Popen
 from time import sleep
 from pathlib import Path
@@ -254,13 +255,17 @@ def gaussian_submit(file, email, session):
     with open(new_file, "w") as f:
         for line in open(str(file_edit), "r").readlines():
             line = sub(
-                r"%NProcShared=.+", rf"%NProcShared={gaussian_cpus_per_job}", line
+                r"%NProcShared=.+",
+                rf"%NProcShared={gaussian_cpus_per_job}",
+                line,
+                flags=IGNORECASE,
             )
-            line = sub(r"%mem=.+", r"%mem=2GB", line)
+            line = sub(r"%mem=.+", r"%mem=2GB", line, flags=IGNORECASE)
             line = sub(
                 r"%Chk=.+",
                 rf"%chk={get_cwd}/user_data/{folder_name}/{filename[:-4]}/{filename[:-4]}.chk\n%RWF={getcwd()}/user_data/{folder_name}/{filename[:-4]}/{filename[:-4]}.rwf",
                 line,
+                flags=IGNORECASE,
             )
             f.write(line)
     # Creating sbatch contents
