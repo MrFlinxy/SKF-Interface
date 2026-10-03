@@ -23,6 +23,7 @@ from .sbatch import (
     gaussian_submit,
     gaussian_jsme,
 )
+from .slurm import SlurmClient
 
 
 main = Blueprint("main", __name__)
@@ -40,6 +41,15 @@ def index():
         return redirect("home")
     else:
         return redirect("login")
+    
+@main.route("/testslurm")
+def testslurm():
+    slurmclient = SlurmClient()
+
+    data = slurmclient.list_jobs()
+    for job in data["jobs"]:
+        print(job["job_id"], job["job_state"])
+    return data
 
 
 @main.route("/login", methods=["GET", "POST"])

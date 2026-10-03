@@ -1,5 +1,4 @@
 from os import environ, getcwd, mkdir, path
-from sre_parse import FLAGS
 from dotenv import load_dotenv
 from re import I, sub, IGNORECASE
 from subprocess import Popen
