@@ -92,6 +92,11 @@
         <option value="FAILED">Gagal</option>
         <option value="CANCELLED">Dibatalkan</option>
       </select>
+      <div class="flex items-center gap-2">
+        <label for="ownFilter">Tampilkan Perhitungan Saya Saja</label>
+
+        <input type="checkbox" id="ownFilter" class="toggle" />
+      </div>
       <table class="w-full text-left text-sm text-gray-500 rtl:text-right">
         <thead class="bg-gray-50 text-xs uppercase text-gray-700">
           <tr>
@@ -165,16 +170,18 @@
 
   <script>
     const stateFilter = document.getElementById("stateFilter");
+    const ownFilter = document.getElementById("ownFilter");
     const jobTableBody = document.getElementById("jobTableBody");
 
-    stateFilter.addEventListener("change", async function () {
+    async function loadJobs() {
       const state = this.value;
-
+      const own = ownFilter.checked ? "1" : "0";
       const params = new URLSearchParams();
 
       if (state) {
         params.set("state", state);
       }
+      params.set("own", own);
 
       try {
         const response = await fetch(`/api/queue-v2?${params.toString()}`);
@@ -189,7 +196,10 @@
       } catch (error) {
         console.error(error);
       }
-    });
+    }
+
+    stateFilter.addEventListener("change", loadJobs);
+    ownFilter.addEventListener("change", loadJobs);
 
     function renderJobs(jobs) {
       jobTableBody.innerHTML = "";

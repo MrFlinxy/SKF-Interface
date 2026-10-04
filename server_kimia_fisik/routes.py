@@ -351,12 +351,12 @@ def queue_v2():
     session["akun"] = extend_token(session["akun"])
 
     state = request.args.get("state")
-    own = request.args.get("own")
+    own = request.args.get("own", "1") != "0"
 
     slurmclient = SlurmClient()
 
     result = slurmclient.list_job_history(
-        isOwnJob=False if own == "0" else True,
+        isOwnJob=own,
         state=state,
         email=session["user"],
     )
@@ -374,12 +374,12 @@ def queue_v2_api():
         return jsonify({"error": "Unauthorized"}), 401
 
     state = request.args.get("state")
-    own = request.args.get("own")
+    own = request.args.get("own", "1") != "0"
 
     slurmclient = SlurmClient()
 
     result = slurmclient.list_job_history(
-        isOwnJob=False if own == "0" else True,
+        isOwnJob=own,
         state=state,
         email=session["user"],
     )
