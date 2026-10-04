@@ -4,13 +4,15 @@ import requests
 
 class SlurmClient:
     BASE_URL = "http://127.0.0.1:6820"
+    SLURM_API_VERSION = "v0.0.40"
+    SLURM_URL = f"{BASE_URL}/slurm/{SLURM_API_VERSION}"
+    SLURMDB_URL = f"{BASE_URL}/slurmdb/{SLURM_API_VERSION}"
 
     def __init__(self):
         self.token = None
         self.token_expires_at = 0
 
     def _get_token(self):
-        # Refresh one minute before expiration
         if self.token and time.time() < self.token_expires_at - 60:
             return self.token
 
@@ -20,15 +22,9 @@ class SlurmClient:
             text=True,
             check=True,
         )
-
         output = result.stdout.strip()
-
-        # SLURM_JWT=eyJ...
         self.token = output.split("=", 1)[1]
-
-        # Default Slurm token lifetime = 1800 seconds
         self.token_expires_at = time.time() + 1800
-
         return self.token
 
     def _headers(self):
@@ -37,9 +33,115 @@ class SlurmClient:
             "X-SLURM-USER-TOKEN": self._get_token(),
         }
     
+    def _post_headers(self):
+        return {
+            "Content-Type":"application/json",
+            "X-SLURM-USER-NAME": "mdmachine",
+            "X-SLURM-USER-TOKEN": self._get_token(),
+        }
+    
+    # slurmdctld
     def list_jobs(self):
         response = requests.get(
-            f"{self.BASE_URL}/slurm/v0.0.40/jobs",
+            f"{self.SLURM_URL}/jobs",
+            headers=self._headers(),
+        )
+
+        response.raise_for_status()
+        return response.json()
+    
+    def get_job(self, job_id):
+        response = requests.get(
+            f"{self.SLURM_URL}/job/{job_id}",
+            headers=self._headers(),
+        )
+
+        response.raise_for_status()
+        return response.json()
+    
+    def submit_job(
+            self,
+            account,
+            admin_comment,
+            comment,
+            cpus_per_task,
+        ):
+        body = {
+            "job": {
+                    "account": account,
+                    "admin_comment": admin_comment,
+                    "comment": comment,
+                    "cpus_per_task": cpus_per_task,
+                    "current_working_directory": "/home/mdmachine/SKF-Interface",
+                    "nodes": "1",
+                    "tasks": "1",
+                }
+        }
+        
+        response = requests.post(
+            f"{self.SLURM_URL}/job/submit",
+            headers=self._post_headers(),
+            json=body,
+        )
+
+        response.raise_for_status()
+        return response.json()
+    
+    def cancel_job(self, job_id):
+        response = requests.delete(
+            f"{self.SLURM_URL}/job/{job_id}",
+            headers=self._headers(),
+        )
+
+        response.raise_for_status()
+        return response.json()
+    
+    def suspend_job(self, job_id):
+        body = {
+            "some_field": "some_value"
+        }
+        
+        response = requests.post(
+            f"{self.SLURM_URL}/job/{job_id}",
+            headers=self._post_headers(),
+            json=body,
+        )
+
+        response.raise_for_status()
+        return response.json()
+    
+    def resume_job(self, job_id):
+        body = {
+            "some_field": "some_value"
+        }
+
+        response = requests.post(
+            f"{self.SLURM_URL}/job/{job_id}",
+            headers=self._post_headers(),
+            json=body,
+        )
+
+        response.raise_for_status()
+        return response.json()
+    
+    # slurmdbd
+    def list_job_history(self, state):
+        params = {
+            "state": state,
+        }
+
+        response = requests.get(
+            f"{self.SLURMDB_URL}/jobs",
+            headers=self._headers(),
+            params=params,
+        )
+
+        response.raise_for_status()
+        return response.json()
+    
+    def get_job_history(self, job_id):
+        response = requests.get(
+            f"{self.SLURMDB_URL}/job/{job_id}",
             headers=self._headers(),
         )
 
