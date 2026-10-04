@@ -166,10 +166,16 @@ class SlurmClient:
 
                 if state not in job_states:
                     continue
+            
+            displayed_email = censor_email(
+                job_email,
+                email
+            )
 
             filtered_jobs.append({
                 "job_id": job.get("job_id"),
                 "job_name": job_name,
+                "user_email": displayed_email,
                 "required": {
                     "CPUs": job.get("required", {}).get("CPUs")
                 },
