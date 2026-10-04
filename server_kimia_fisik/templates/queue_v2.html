@@ -83,67 +83,155 @@
     </div>
   </nav>
 
-  <body class="grid place-items-center bg-background mb-12 md:mb-20">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <select id="stateFilter">
-        <option value="">Semua</option>
-        <option value="RUNNING">Dalam Proses</option>
-        <option value="COMPLETED">Berhasil</option>
-        <option value="FAILED">Gagal</option>
-        <option value="CANCELLED">Dibatalkan</option>
-      </select>
-      <div class="flex items-center gap-2">
-        <label for="ownFilter">Tampilkan Perhitungan Saya Saja</label>
+  <body class="min-h-screen bg-background px-3 pb-24 md:px-6 md:pb-28">
+    <main class="mx-auto w-full max-w-screen-2xl">
+      <!-- Header / Filters -->
+      <div class="mb-4 rounded-lg bg-white p-4 shadow-sm">
+        <div
+          class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+        >
+          <!-- Title -->
+          <div>
+            <h1 class="text-xl font-semibold text-gray-900">
+              Antrian Komputasi
+            </h1>
+            <p class="mt-1 text-sm text-gray-500">
+              Daftar perhitungan yang sedang dan telah diproses.
+            </p>
+          </div>
 
-        <input type="checkbox" id="ownFilter" class="toggle" />
-      </div>
-      <table class="w-full text-left text-sm text-gray-500 rtl:text-right">
-        <thead class="bg-gray-50 text-xs uppercase text-gray-700">
-          <tr>
-            <th scope="col" class="px-6 py-3 text-center">ID</th>
-            <th scope="col" class="px-6 py-3 text-center">Perhitungan</th>
-            <th scope="col" class="px-6 py-3 text-center">Status</th>
-            <th scope="col" class="px-6 py-3 text-center">CPU</th>
-            <th scope="col" class="px-6 py-3 text-center">Waktu Submit</th>
-            <th scope="col" class="px-6 py-3 text-center">Total Waktu</th>
-            <th scope="col" class="px-6 py-3 text-center">Email</th>
-            <th scope="col" class="px-6 py-3 text-center"></th>
-          </tr>
-        </thead>
-        <tbody id="jobTableBody">
-          {% for job in queues %}
-          <tr class="border-b odd:bg-white even:bg-gray-50">
-            <th
-              scope="row"
-              class="whitespace-nowrap px-6 py-4 text-center font-medium text-gray-900"
-            >
-              {{ job["job_id"] }}
-            </th>
-
-            <td class="px-6 py-4 text-center">{{ job["job_name"] }}</td>
-            <td class="px-6 py-4 text-center">{{ job["state"] }}</td>
-            <td class="px-6 py-4 text-center">{{ job["cpu"] }}</td>
-            <td class="px-6 py-4 text-center">{{ job["submit_time"] }}</td>
-            <td class="px-6 py-4 text-center">{{ job["elapsed"] }}</td>
-            <td class="px-6 py-4 text-center">{{ job["user_email"] }}</td>
-
-            <td class="px-6 py-4 text-center">
-              {% if job["user_email"] and "*" not in job["user_email"] and
-              job["state"] in ["PENDING", "RUNNING"] %}
-              <button
-                onclick="cancelJob({{ job['job_id'] }})"
-                class="btn btn-error btn-sm text-red-600 font-bold"
+          <!-- Filters -->
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <!-- State filter -->
+            <div class="flex flex-col gap-1">
+              <label
+                for="stateFilter"
+                class="text-sm font-medium text-gray-700"
               >
-                Cancel
-              </button>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <div class="pt-4 text-xl">{{message}}</div>
+                Status
+              </label>
+
+              <select
+                id="stateFilter"
+                class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:ring-blue-500 sm:w-48"
+              >
+                <option value="">Semua</option>
+                <option value="RUNNING">Dalam Proses</option>
+                <option value="COMPLETED">Berhasil</option>
+                <option value="FAILED">Gagal</option>
+                <option value="CANCELLED">Dibatalkan</option>
+              </select>
+            </div>
+
+            <!-- Own jobs toggle -->
+            <label
+              for="ownFilter"
+              class="flex min-h-[42px] cursor-pointer items-center gap-3 rounded-lg border border-gray-300 bg-white px-3 py-2"
+            >
+              <input type="checkbox" id="ownFilter" class="toggle" />
+
+              <span class="text-sm font-medium text-gray-700">
+                Perhitungan saya saja
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-hidden rounded-lg bg-white shadow-md">
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[900px] text-left text-sm text-gray-500">
+            <thead class="bg-gray-50 text-xs uppercase text-gray-700">
+              <tr>
+                <th scope="col" class="whitespace-nowrap px-4 py-3 text-center">
+                  ID
+                </th>
+
+                <th scope="col" class="whitespace-nowrap px-4 py-3 text-center">
+                  Perhitungan
+                </th>
+
+                <th scope="col" class="whitespace-nowrap px-4 py-3 text-center">
+                  Status
+                </th>
+
+                <th scope="col" class="whitespace-nowrap px-4 py-3 text-center">
+                  CPU
+                </th>
+
+                <th scope="col" class="whitespace-nowrap px-4 py-3 text-center">
+                  Waktu Submit
+                </th>
+
+                <th scope="col" class="whitespace-nowrap px-4 py-3 text-center">
+                  Total Waktu
+                </th>
+
+                <th scope="col" class="whitespace-nowrap px-4 py-3 text-center">
+                  Email
+                </th>
+
+                <th scope="col" class="w-24 px-4 py-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+
+            <tbody id="jobTableBody">
+              {% for job in queues %}
+              <tr class="border-b odd:bg-white even:bg-gray-50">
+                <th
+                  scope="row"
+                  class="whitespace-nowrap px-4 py-4 text-center font-medium text-gray-900"
+                >
+                  {{ job["job_id"] }}
+                </th>
+
+                <td class="whitespace-nowrap px-4 py-4 text-center">
+                  {{ job["job_name"] }}
+                </td>
+
+                <td class="whitespace-nowrap px-4 py-4 text-center">
+                  {{ job["state"] }}
+                </td>
+
+                <td class="whitespace-nowrap px-4 py-4 text-center">
+                  {{ job["cpu"] }}
+                </td>
+
+                <td class="whitespace-nowrap px-4 py-4 text-center">
+                  {{ job["submit_time"] }}
+                </td>
+
+                <td class="whitespace-nowrap px-4 py-4 text-center">
+                  {{ job["elapsed"] }}
+                </td>
+
+                <td class="whitespace-nowrap px-4 py-4 text-center">
+                  {{ job["user_email"] }}
+                </td>
+
+                <td class="px-4 py-4 text-center">
+                  {% if job["user_email"] and "*" not in job["user_email"] and
+                  job["state"] in ["PENDING", "RUNNING"] %}
+                  <button
+                    onclick="cancelJob({{ job['job_id'] }})"
+                    class="btn btn-error btn-sm"
+                  >
+                    Cancel
+                  </button>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {% if message %}
+      <div class="pt-4 text-center text-xl text-gray-600">{{ message }}</div>
+      {% endif %}
+    </main>
   </body>
 
   <footer
@@ -227,50 +315,53 @@
           ["PENDING", "RUNNING"].includes(job.state);
 
         row.innerHTML = `
-            <th
-                scope="row"
-                class="whitespace-nowrap px-6 py-4 text-center font-medium text-gray-900"
-            >
-                ${job.job_id}
-            </th>
+      <th
+        scope="row"
+        class="whitespace-nowrap px-4 py-4 text-center font-medium text-gray-900"
+      >
+        ${job.job_id}
+      </th>
 
-            <td class="px-6 py-4 text-center">
-                ${job.job_name}
-            </td>
+      <td class="whitespace-nowrap px-4 py-4 text-center">
+        ${job.job_name}
+      </td>
 
-            <td class="px-6 py-4 text-center">
-                ${job.state}
-            </td>
+      <td class="whitespace-nowrap px-4 py-4 text-center">
+        ${job.state}
+      </td>
 
-            <td class="px-6 py-4 text-center">
-                ${job.cpu}
-            </td>
+      <td class="whitespace-nowrap px-4 py-4 text-center">
+        ${job.cpu}
+      </td>
 
-            <td class="px-6 py-4 text-center">
-                ${job.submit_time}
-            </td>
+      <td class="whitespace-nowrap px-4 py-4 text-center">
+        ${job.submit_time}
+      </td>
 
-            <td class="px-6 py-4 text-center">
-                ${job.elapsed}
-            </td>
+      <td class="whitespace-nowrap px-4 py-4 text-center">
+        ${job.elapsed}
+      </td>
 
-            <td class="px-6 py-4 text-center">
-                ${job.user_email ?? ""}
-            </td>
+      <td class="whitespace-nowrap px-4 py-4 text-center">
+        ${job.user_email ?? ""}
+      </td>
 
-            <td class="px-6 py-4 text-center">
-                ${
-                  canCancel
-                    ? `<button
-                                onclick="cancelJob(${job.job_id})"
-                                class="btn btn-error btn-sm text-red-600 font-bold"
-                           >
-                                Cancel
-                           </button>`
-                    : ""
-                }
-            </td>
-        `;
+      <td class="px-4 py-4 text-center">
+        ${
+          canCancel
+            ? `
+              <button
+                type="button"
+                onclick="cancelJob(${job.job_id})"
+                class="btn btn-error btn-sm"
+              >
+                Cancel
+              </button>
+            `
+            : ""
+        }
+      </td>
+    `;
 
         jobTableBody.appendChild(row);
       });
