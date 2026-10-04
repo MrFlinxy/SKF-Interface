@@ -165,7 +165,7 @@ end
         f.write(orca_inp)
 
     orca_cmd = f"{orca_full_path} user_data/{folder_name}/{jsme_nama}/{jsme_nama}.inp > user_data/{folder_name}/{jsme_nama}/{jsme_nama}.out --oversubscribe"
-    sbatch_content = f"""{sbatch_header}\n#SBATCH --comment=\"{email}\"\n\n{orca_export}\n\n{orca_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n#SBATCH --comment "{email}"\n\n{orca_export}\n\n{orca_cmd}"""
 
     # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)
