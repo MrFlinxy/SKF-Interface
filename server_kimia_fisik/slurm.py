@@ -64,11 +64,10 @@ class SlurmClient:
             self,
             reqData,
         ):
-        
+
         body = {
             "script": reqData["command"],
             "job": {
-                    "account": reqData["akun"],
                     "admin_comment": reqData["admin_comment"],
                     "comment": reqData["comment"],
                     "cpus_per_task": reqData["cpus_per_task"],
@@ -101,28 +100,18 @@ class SlurmClient:
         return response.json()
     
     def suspend_job(self, job_id):
-        body = {
-            "some_field": "some_value"
-        }
-        
-        response = requests.post(
-            f"{self.SLURM_URL}/job/{job_id}",
-            headers=self._post_headers(),
-            json=body,
+        response = requests.delete(
+            f"{self.SLURM_URL}/job/{job_id}?signal=STOP",
+            headers=self._headers(),
         )
 
         response.raise_for_status()
         return response.json()
     
     def resume_job(self, job_id):
-        body = {
-            "some_field": "some_value"
-        }
-
-        response = requests.post(
-            f"{self.SLURM_URL}/job/{job_id}",
-            headers=self._post_headers(),
-            json=body,
+        response = requests.delete(
+            f"{self.SLURM_URL}/job/{job_id}?signal=CONT",
+            headers=self._headers(),
         )
 
         response.raise_for_status()
