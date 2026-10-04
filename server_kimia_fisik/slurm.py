@@ -166,14 +166,7 @@ class SlurmClient:
             # --------------------------------
 
             if state:
-                job_states = (
-                    job
-                    .get("state", {})
-                    .get("current", [])
-                )
-                # COMPLETED, RUNNING, PENDING, CANCELLED
-
-                if state not in job_states:
+                if state != job.get("state", {}).get("current", ["UNKNOWN"])[-1]:
                     continue
             
             displayed_email = censor_email(
