@@ -1,6 +1,7 @@
 import subprocess
 import time
 import requests
+import re
 
 class SlurmClient:
     BASE_URL = "http://127.0.0.1:6820"
@@ -118,7 +119,7 @@ class SlurmClient:
         return response.json()
     
     # slurmdbd
-    def list_job_history(self, state=None, email=None, name=None):
+    def list_job_history(self, isOwnJob=False, state=None, email=None, name=None):
         response = requests.get(
             f"{self.SLURMDB_URL}/jobs",
             headers=self._headers(),
@@ -128,25 +129,72 @@ class SlurmClient:
 
         data = response.json()
         jobs = data.get("jobs", [])
-        if state:
-            jobs = [
-                job for job in jobs
-                if state in job.get("state", {}).get("current", [])
-            ]
+        filtered_jobs = []
+        for job in jobs:
 
-        if email:
-            jobs = [
-                job for job in jobs
-                if job.get("comment", {}).get("job") == email
-            ]
-        
-        if name:
-            jobs = [
-                job for job in jobs
-                if job.get("comment", {}).get("administrator") == name
-            ]
+            # --------------------------------
+            # Extract email and job name
+            # --------------------------------
 
-        data["jobs"] = jobs
+            submit_line = job.get("submit_line", "")
+
+            job_email, job_name = parse_submit_line(
+                submit_line
+            )
+
+            # --------------------------------
+            # Filter own jobs
+            # --------------------------------
+
+            if isOwnJob:
+                if not email:
+                    continue
+
+                if job_email != email:
+                    continue
+
+            # --------------------------------
+            # Filter state
+            # --------------------------------
+
+            if state:
+                job_states = (
+                    job
+                    .get("state", {})
+                    .get("current", [])
+                )
+
+                if state not in job_states:
+                    continue
+
+            # --------------------------------
+            # Filter job name
+            # --------------------------------
+
+            if name and job_name != name:
+                continue
+
+            # --------------------------------
+            # Add application-level fields
+            # --------------------------------
+
+            job["user_email"] = censor_email(
+                job_email,
+                email
+            )
+
+            job["job_name"] = job_name
+
+            # --------------------------------
+            # Don't expose submit_line
+            # --------------------------------
+
+            job.pop("submit_line", None)
+
+            filtered_jobs.append(job)
+
+        data["jobs"] = filtered_jobs
+
         return data
     
     def get_job_history(self, job_id):
@@ -157,3 +205,44 @@ class SlurmClient:
 
         response.raise_for_status()
         return response.json()
+
+def parse_submit_line(submit_line):
+    match = re.search(
+        r'user_data/([^/]+)/([^/]+)/[^/]+\.sh',
+        submit_line
+    )
+
+    if not match:
+        return None, None
+
+    user_encoded = match.group(1)
+    job_name = match.group(2)
+
+    # Remove timestamp from the user directory
+    # mdimasn131_gmailcom_1709124396463
+    user_encoded = re.sub(r'_\d+$', '', user_encoded)
+
+    # Convert encoded email
+    email = user_encoded.replace('_', '@')
+
+    return email, job_name
+
+def censor_email(email, own_email):
+    if not email:
+        return email
+
+    # Don't censor our own email
+    if email == own_email:
+        return email
+
+    if "@" not in email:
+        return email
+
+    local, domain = email.split("@", 1)
+
+    if len(local) <= 2:
+        censored_local = local[0] + "*"
+    else:
+        censored_local = local[:2] + "*" * (len(local) - 2)
+
+    return f"{censored_local}@{domain}"
