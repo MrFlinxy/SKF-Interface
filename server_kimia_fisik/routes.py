@@ -358,7 +358,7 @@ def queue_v2():
     result = slurmclient.list_job_history(
         isOwnJob=own,
         state=state,
-        email=session["akun"],
+        email=session["user"],
     )
 
     return render_template(
@@ -381,7 +381,7 @@ def queue_v2_api():
     result = slurmclient.list_job_history(
         isOwnJob=own,
         state=state,
-        email=session["akun"],
+        email=session["user"],
     )
 
     return jsonify(result)
