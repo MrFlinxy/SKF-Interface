@@ -2,6 +2,10 @@ import subprocess
 import time
 import requests
 import re
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+WIB = ZoneInfo("Asia/Jakarta")
 
 class SlurmClient:
     BASE_URL = "http://127.0.0.1:6820"
@@ -182,6 +186,9 @@ class SlurmClient:
                 "state": {
                     "current": job.get("state", {}).get("current", [])
                 },
+                "submit_time": format_submit_time(
+                    job.get("time", {}).get("submission")
+                ),
                 "elapsed": format_elapsed(
                     job.get("time", {}).get("elapsed")
                 )
@@ -247,3 +254,12 @@ def format_elapsed(seconds):
     minutes, seconds = divmod(remainder, 60)
 
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+def format_submit_time(timestamp):
+    if not timestamp:
+        return None
+
+    return datetime.fromtimestamp(
+        timestamp,
+        tz=WIB
+    ).strftime("%Y-%m-%d %H:%M:%S")
