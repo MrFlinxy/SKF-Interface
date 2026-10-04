@@ -191,7 +191,7 @@ class SlurmClient:
                 )
             })
 
-        return jobs
+        return filtered_jobs
     
     def get_job_history(self, job_id):
         response = requests.get(
