@@ -132,7 +132,7 @@
               job["state"] in ["PENDING", "RUNNING"] %}
               <button
                 onclick="cancelJob({{ job['job_id'] }})"
-                class="btn btn-error btn-sm"
+                class="btn btn-error btn-sm text-red-600 font-bold"
               >
                 Cancel
               </button>
@@ -263,7 +263,7 @@
                   canCancel
                     ? `<button
                                 onclick="cancelJob(${job.job_id})"
-                                class="btn btn-error btn-sm"
+                                class="btn btn-error btn-sm text-red-600 font-bold"
                            >
                                 Cancel
                            </button>`
