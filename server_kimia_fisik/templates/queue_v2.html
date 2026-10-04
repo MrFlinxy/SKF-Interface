@@ -216,47 +216,61 @@
     function renderJobs(jobs) {
       jobTableBody.innerHTML = "";
 
-      jobs.forEach((job, index) => {
+      jobs.forEach((job) => {
         const row = document.createElement("tr");
 
         row.className = "border-b odd:bg-white even:bg-gray-50";
 
+        const canCancel =
+          job.user_email &&
+          !job.user_email.includes("*") &&
+          ["PENDING", "RUNNING"].includes(job.state);
+
         row.innerHTML = `
-                <th
-                    scope="row"
-                    class="whitespace-nowrap px-6 py-4 text-center font-medium text-gray-900"
-                >
-                    ${job.job_id}
-                </th>
+            <th
+                scope="row"
+                class="whitespace-nowrap px-6 py-4 text-center font-medium text-gray-900"
+            >
+                ${job.job_id}
+            </th>
 
-                <td class="px-6 py-4 text-center">
-                    ${job.job_name}
-                </td>
+            <td class="px-6 py-4 text-center">
+                ${job.job_name}
+            </td>
 
-                <td class="px-6 py-4 text-center">
-                    ${job.state}
-                </td>
+            <td class="px-6 py-4 text-center">
+                ${job.state}
+            </td>
 
-                <td class="px-6 py-4 text-center">
-                    ${job.cpu}
-                </td>
+            <td class="px-6 py-4 text-center">
+                ${job.cpu}
+            </td>
 
-                <td class="px-6 py-4 text-center">
-                    ${job.submit_time}
-                </td>
+            <td class="px-6 py-4 text-center">
+                ${job.submit_time}
+            </td>
 
-                <td class="px-6 py-4 text-center">
-                    ${job.elapsed}
-                </td>
+            <td class="px-6 py-4 text-center">
+                ${job.elapsed}
+            </td>
 
-                <td class="px-6 py-4 text-center">
-                    ${job.user_email}
-                </td>
+            <td class="px-6 py-4 text-center">
+                ${job.user_email ?? ""}
+            </td>
 
-                <td class="px-6 py-4 text-center">
-                    <button>Menu</button>
-                </td>
-            `;
+            <td class="px-6 py-4 text-center">
+                ${
+                  canCancel
+                    ? `<button
+                                onclick="cancelJob(${job.job_id})"
+                                class="bg-red-500 text-white px-3 py-1 rounded"
+                           >
+                                Cancel
+                           </button>`
+                    : ""
+                }
+            </td>
+        `;
 
         jobTableBody.appendChild(row);
       });
