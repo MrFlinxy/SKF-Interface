@@ -118,20 +118,36 @@ class SlurmClient:
         return response.json()
     
     # slurmdbd
-    def list_job_history(self, state, name):
-        params = {
-            "state": state,
-            "job_name": name,
-        }
-
+    def list_job_history(self, state=None, email=None, name=None):
         response = requests.get(
             f"{self.SLURMDB_URL}/jobs",
             headers=self._headers(),
-            params=params,
         )
 
         response.raise_for_status()
-        return response.json()
+
+        data = response.json()
+        jobs = data.get("jobs", [])
+        if state:
+            jobs = [
+                job for job in jobs
+                if state in job.get("state", {}).get("current", [])
+            ]
+
+        if email:
+            jobs = [
+                job for job in jobs
+                if job.get("comment", {}).get("job") == email
+            ]
+        
+        if name:
+            jobs = [
+                job for job in jobs
+                if job.get("comment", {}).get("administrator") == name
+            ]
+
+        data["jobs"] = jobs
+        return data
     
     def get_job_history(self, job_id):
         response = requests.get(

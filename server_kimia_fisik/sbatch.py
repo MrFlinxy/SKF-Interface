@@ -44,8 +44,6 @@ gaussian_export_list = [
 
 
 def orca_submit(file, email, session):
-    slurmclient = SlurmClient()
-    
     # Upload file
     filename = file.filename
     folder_path = path.join(getcwd(), "user_data")
@@ -71,7 +69,7 @@ def orca_submit(file, email, session):
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
     orca_cmd = f"{orca_full_path} {file_path}/{filename[:-4]}_.inp > {file_path}/{filename[:-4]}.out --oversubscribe"
-    sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n#SBATCH --comment="{email}"\n#SBATCH --admin-comment="{filename[:-4]}"\n\n{orca_export}\n\n{orca_cmd}"""
 
     # # Use Slurm Client
     # reqData = {
