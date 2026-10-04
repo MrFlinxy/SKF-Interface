@@ -190,6 +190,11 @@ class SlurmClient:
                 )
             })
 
+        filtered_jobs.sort(
+            key=lambda job: job["submit_time"],
+            reverse=True
+        )
+
         return filtered_jobs
     
     def get_job_history(self, job_id):
