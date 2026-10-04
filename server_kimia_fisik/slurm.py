@@ -119,7 +119,7 @@ class SlurmClient:
         return response.json()
     
     # slurmdbd
-    def list_job_history(self, isOwnJob=False, state=None, email=None, name=None):
+    def list_job_history(self, isOwnJob=False, state=None, email=None):
         response = requests.get(
             f"{self.SLURMDB_URL}/jobs",
             headers=self._headers(),
@@ -166,13 +166,6 @@ class SlurmClient:
 
                 if state not in job_states:
                     continue
-
-            # --------------------------------
-            # Filter job name
-            # --------------------------------
-
-            if name and job_name != name:
-                continue
 
             # --------------------------------
             # Add application-level fields

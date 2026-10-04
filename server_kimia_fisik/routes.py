@@ -91,7 +91,6 @@ def slurmresumejob(job_id):
 @main.route("/listjobhistory", methods=["GET"])
 def listjobhistory():
     state = request.args.get("state")
-    name = request.args.get("name")
     email = request.args.get("email")
     is_own_job = request.args.get("own")
     slurmclient = SlurmClient()
@@ -100,7 +99,6 @@ def listjobhistory():
         False if (is_own_job == "0") else True,
         state,
         email,
-        name,
     )
     return resp
 
