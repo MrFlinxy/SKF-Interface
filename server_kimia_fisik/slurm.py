@@ -146,7 +146,7 @@ class SlurmClient:
 
             submit_line = job.get("submit_line", "")
 
-            job_email, job_name = parse_submit_line(
+            job_email, _ = parse_submit_line(
                 submit_line
             )
 
@@ -165,6 +165,8 @@ class SlurmClient:
                 job_email,
                 email
             )
+
+            job_name = job.get("job_name", "")
 
             filtered_jobs.append({
                 "job_id": job.get("job_id"),
