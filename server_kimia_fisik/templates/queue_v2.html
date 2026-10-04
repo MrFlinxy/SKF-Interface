@@ -174,7 +174,7 @@
     const jobTableBody = document.getElementById("jobTableBody");
 
     async function loadJobs() {
-      const state = this.value;
+      const state = stateFilter.value;
       const own = ownFilter.checked ? "1" : "0";
       const params = new URLSearchParams();
 
