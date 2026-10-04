@@ -167,6 +167,7 @@ class SlurmClient:
                     .get("state", {})
                     .get("current", [])
                 )
+                # COMPLETED, RUNNING, PENDING
 
                 if state not in job_states:
                     continue
@@ -181,7 +182,7 @@ class SlurmClient:
                 "job_name": job_name,
                 "user_email": displayed_email,
                 "cpu": job.get("required", {}).get("CPUs"),
-                "state": job.get("state", {}).get("current", ["UNKNOWN"])[0],
+                "state": job.get("state", {}).get("current", ["UNKNOWN"])[-1],
                 "submit_time": format_submit_time(
                     job.get("time", {}).get("submission")
                 ),
