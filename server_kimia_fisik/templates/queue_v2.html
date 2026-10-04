@@ -112,9 +112,8 @@
               scope="row"
               class="whitespace-nowrap px-6 py-4 text-center font-medium text-gray-900"
             >
-              {{ queues[i][0] }}
+              {{ queues[i]["job_id"] }}
             </th>
-            <td class="px-6 py-4 text-center">{{ queues[i]["job_id"]}}</td>
             <td class="px-6 py-4 text-center">{{ queues[i]["job_name"]}}</td>
             <td class="px-6 py-4 text-center">{{ queues[i]["state"]}}</td>
             <td class="px-6 py-4 text-center">{{ queues[i]["cpu"]}}</td>
