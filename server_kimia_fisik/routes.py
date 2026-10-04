@@ -287,7 +287,7 @@ def jsme(software):
         return redirect("login")
 
 
-@main.route("/queue")
+@main.route("/queue_remove")
 def queue():
     if "user" in session and "akun" in session:
         session["akun"] = extend_token(session["akun"])
