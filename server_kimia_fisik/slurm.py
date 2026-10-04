@@ -167,28 +167,21 @@ class SlurmClient:
                 if state not in job_states:
                     continue
 
-            # --------------------------------
-            # Add application-level fields
-            # --------------------------------
+            filtered_jobs.append({
+                "job_id": job.get("job_id"),
+                "job_name": job_name,
+                "required": {
+                    "CPUs": job.get("required", {}).get("CPUs")
+                },
+                "state": {
+                    "current": job.get("state", {}).get("current", [])
+                },
+                "elapsed": format_elapsed(
+                    job.get("time", {}).get("elapsed")
+                )
+            })
 
-            job["user_email"] = censor_email(
-                job_email,
-                email
-            )
-
-            job["job_name"] = job_name
-
-            # --------------------------------
-            # Don't expose submit_line
-            # --------------------------------
-
-            job.pop("submit_line", None)
-
-            filtered_jobs.append(job)
-
-        data["jobs"] = filtered_jobs
-
-        return data
+        return filtered_jobs
     
     def get_job_history(self, job_id):
         response = requests.get(
@@ -239,3 +232,12 @@ def censor_email(email, own_email):
         censored_local = local[:2] + "*" * (len(local) - 2)
 
     return f"{censored_local}@{domain}"
+
+def format_elapsed(seconds):
+    if seconds is None:
+        return None
+
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
