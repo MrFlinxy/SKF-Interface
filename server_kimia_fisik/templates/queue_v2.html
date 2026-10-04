@@ -85,16 +85,27 @@
 
   <body class="grid place-items-center bg-background mb-12 md:mb-20">
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <select id="stateFilter">
+        <option value="">Semua</option>
+        <option value="RUNNING">Dalam Proses</option>
+        <option value="COMPLETED">Berhasil</option>
+        <option value="FAILED">Gagal</option>
+        <option value="CANCELLED">Dibatalkan</option>
+      </select>
       <table class="w-full text-left text-sm text-gray-500 rtl:text-right">
         <thead class="bg-gray-50 text-xs uppercase text-gray-700">
           <tr>
-            <th scope="col" class="px-6 py-3 text-center">Name</th>
+            <th scope="col" class="px-6 py-3 text-center">ID</th>
+            <th scope="col" class="px-6 py-3 text-center">Perhitungan</th>
             <th scope="col" class="px-6 py-3 text-center">Status</th>
-            <th scope="col" class="px-6 py-3 text-center">Submitted at</th>
-            <th scope="col" class="px-6 py-3 text-center">Time</th>
+            <th scope="col" class="px-6 py-3 text-center">CPU</th>
+            <th scope="col" class="px-6 py-3 text-center">Waktu Submit</th>
+            <th scope="col" class="px-6 py-3 text-center">Total Waktu</th>
+            <th scope="col" class="px-6 py-3 text-center">Email</th>
+            <th scope="col" class="px-6 py-3 text-center"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="jobTableBody">
           {% for i in queues_len%}
           <tr class="border-b odd:bg-white even:bg-gray-50">
             <th
@@ -103,9 +114,14 @@
             >
               {{ queues[i][0] }}
             </th>
-            <td class="px-6 py-4 text-center">{{ queues[i][1]}}</td>
-            <td class="px-6 py-4 text-center">{{ queues[i][2]}}</td>
-            <td class="px-6 py-4 text-center">{{ queues[i][3]}}</td>
+            <td class="px-6 py-4 text-center">{{ queues[i]["job_id"]}}</td>
+            <td class="px-6 py-4 text-center">{{ queues[i]["job_name"]}}</td>
+            <td class="px-6 py-4 text-center">{{ queues[i]["state"]}}</td>
+            <td class="px-6 py-4 text-center">{{ queues[i]["cpu"]}}</td>
+            <td class="px-6 py-4 text-center">{{ queues[i]["submit_time"]}}</td>
+            <td class="px-6 py-4 text-center">{{ queues[i]["elapsed"]}}</td>
+            <td class="px-6 py-4 text-center">{{ queues[i]["user_email"]}}</td>
+            <td class="px-6 py-4 text-center"><button>Menu</button></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -147,4 +163,86 @@
       </li>
     </ul>
   </footer>
+
+  <script>
+    const stateFilter = document.getElementById("stateFilter");
+    const jobTableBody = document.getElementById("jobTableBody");
+
+    stateFilter.addEventListener("change", async function () {
+      const state = this.value;
+
+      const params = new URLSearchParams();
+
+      if (state) {
+        params.set("state", state);
+      }
+
+      try {
+        const response = await fetch(`/api/queue-v2?${params.toString()}`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch jobs");
+        }
+
+        const jobs = await response.json();
+
+        renderJobs(jobs);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    function renderJobs(jobs) {
+      jobTableBody.innerHTML = "";
+
+      jobs.forEach((job, index) => {
+        const row = document.createElement("tr");
+
+        row.className = "border-b odd:bg-white even:bg-gray-50";
+
+        row.innerHTML = `
+                <th
+                    scope="row"
+                    class="whitespace-nowrap px-6 py-4 text-center font-medium text-gray-900"
+                >
+                    ${index + 1}
+                </th>
+
+                <td class="px-6 py-4 text-center">
+                    ${job.job_id}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    ${job.job_name}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    ${job.state}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    ${job.cpu}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    ${job.submit_time}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    ${job.elapsed}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    ${job.user_email}
+                </td>
+
+                <td class="px-6 py-4 text-center">
+                    <button>Menu</button>
+                </td>
+            `;
+
+        jobTableBody.appendChild(row);
+      });
+    }
+  </script>
 </html>

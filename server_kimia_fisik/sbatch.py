@@ -5,7 +5,6 @@ from subprocess import Popen
 from time import sleep
 from pathlib import Path
 
-from .slurm import SlurmClient
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .openbabel_python import smi_xyz
 from .pyrebase_init import user_folder_name

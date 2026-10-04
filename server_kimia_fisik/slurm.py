@@ -124,9 +124,13 @@ class SlurmClient:
     
     # slurmdbd
     def list_job_history(self, isOwnJob=False, state=None, email=None):
+        params = {}
+        if state:
+            params["state"] = state
         response = requests.get(
             f"{self.SLURMDB_URL}/jobs",
             headers=self._headers(),
+            params=params,
         )
 
         response.raise_for_status()
@@ -155,21 +159,6 @@ class SlurmClient:
                     continue
 
                 if job_email != email:
-                    continue
-
-            # --------------------------------
-            # Filter state
-            # --------------------------------
-
-            if state:
-                job_states = (
-                    job
-                    .get("state", {})
-                    .get("current", [])
-                )
-                # COMPLETED, RUNNING, PENDING, CANCELLED
-
-                if state not in job_states:
                     continue
             
             displayed_email = censor_email(

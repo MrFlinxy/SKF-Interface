@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import Blueprint, render_template, redirect, request, send_file, session
+from flask import Blueprint, render_template, redirect, request, send_file, session, jsonify
 from json import loads
 from os import getcwd, listdir, path
 from pathlib import Path
@@ -342,7 +342,49 @@ def queue():
         )
     else:
         return redirect("login")
+    
+@main.route("/queue-v2")
+def queue_v2():
+    if "user" not in session or "akun" not in session:
+        return redirect("login")
 
+    session["akun"] = extend_token(session["akun"])
+
+    state = request.args.get("state")
+    own = request.args.get("own")
+
+    slurmclient = SlurmClient()
+
+    result = slurmclient.list_job_history(
+        isOwnJob=False if own == "0" else True,
+        state=state,
+        email=session["user"],
+    )
+
+    return render_template(
+        "queue_v2.html",
+        queues=result,
+        queues_len=range(len(result)),
+    )
+
+@main.route("/api/queue-v2")
+def queue_v2_api():
+
+    if "user" not in session or "akun" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    state = request.args.get("state")
+    own = request.args.get("own")
+
+    slurmclient = SlurmClient()
+
+    result = slurmclient.list_job_history(
+        isOwnJob=False if own == "0" else True,
+        state=state,
+        email=session["user"],
+    )
+
+    return jsonify(result)
 
 @main.route("/result")
 def result():
