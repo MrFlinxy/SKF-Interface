@@ -135,6 +135,8 @@ class SlurmClient:
         jobs = data.get("jobs", [])
         filtered_jobs = []
         for job in jobs:
+            if job.get("job_id") < 3262:
+                continue
 
             # --------------------------------
             # Extract email and job name
