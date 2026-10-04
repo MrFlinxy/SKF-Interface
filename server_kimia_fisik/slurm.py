@@ -118,7 +118,7 @@ class SlurmClient:
         return response.json()
     
     # slurmdbd
-    def list_job_history(self, state, account, name):
+    def list_job_history(self, state, name):
         params = {
             "state": state,
             "job_name": name,
