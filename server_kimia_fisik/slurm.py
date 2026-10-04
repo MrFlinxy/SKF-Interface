@@ -167,7 +167,7 @@ class SlurmClient:
                     .get("state", {})
                     .get("current", [])
                 )
-                # COMPLETED, RUNNING, PENDING
+                # COMPLETED, RUNNING, PENDING, CANCELLED
 
                 if state not in job_states:
                     continue
@@ -196,7 +196,7 @@ class SlurmClient:
             reverse=True
         )
 
-        return jobs
+        return filtered_jobs
     
     def get_job_history(self, job_id):
         response = requests.get(
