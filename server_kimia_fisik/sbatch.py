@@ -182,6 +182,7 @@ end
             "sbatch",
             "--output=/dev/null",
             "--error=/dev/null",
+            f'--comment="{email}"',
             f"user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh",
         ]
     )
