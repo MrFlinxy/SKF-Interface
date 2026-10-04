@@ -351,12 +351,11 @@ def queue_v2():
     session["akun"] = extend_token(session["akun"])
 
     state = request.args.get("state")
-    own = request.args.get("own", "1") != "0"
 
     slurmclient = SlurmClient()
 
     result = slurmclient.list_job_history(
-        isOwnJob=own,
+        isOwnJob=False,
         state=state,
         email=session["user"],
     )
