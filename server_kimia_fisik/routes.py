@@ -42,7 +42,7 @@ def index():
     else:
         return redirect("login")
     
-@main.route("/testslurm")
+@main.route("/testslurm", methods=["GET"])
 def testslurm():
     slurmclient = SlurmClient()
 
@@ -51,6 +51,58 @@ def testslurm():
         print(job["job_id"], job["job_state"])
     return data
 
+@main.route("/slurmgetjob/<job_id>", methods=["GET"])
+def slurmgetjob(job_id):
+    slurmclient = SlurmClient()
+
+    data = slurmclient.get_job(job_id)
+    return data
+
+@main.route("/slurmsubmitjob", methods=["POST"])
+def slurmsubmitjob():
+    slurmclient = SlurmClient()
+    reqData = request.get_json()
+    
+    resp = slurmclient.submit_job(reqData)
+    return resp
+
+
+@main.route("/slurmcanceljob/<job_id>", methods=["DELETE"])
+def slurmcanceljob(job_id):
+    slurmclient = SlurmClient()
+
+    resp = slurmclient.cancel_job(job_id)
+    return resp
+
+@main.route("/slurmsuspendjob/<job_id>", methods=["POST"])
+def slurmsuspendjob(job_id):
+    slurmclient = SlurmClient()
+    
+    resp = slurmclient.suspend_job(job_id)
+    return resp
+
+@main.route("/slurmresumejob/<job_id>", methods=["POST"])
+def slurmresumejob(job_id):
+    slurmclient = SlurmClient()
+
+    resp = slurmclient.resume_job(job_id)
+    return resp
+
+@main.route("/listjobhistory", methods=["GET"])
+def listjobhistory():
+    state = request.args.get("state")
+    account = request.args.get("account")
+    slurmclient = SlurmClient()
+
+    resp = slurmclient.list_job_history(state, account)
+    return resp
+
+@main.route("/getjobhistory/<job_id>", methods=["GET"])
+def getjobhistory(job_id):
+    slurmclient = SlurmClient()
+
+    resp = slurmclient.get_job_history(job_id)
+    return resp
 
 @main.route("/login", methods=["GET", "POST"])
 def login():

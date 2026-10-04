@@ -4,6 +4,8 @@ from re import I, sub, IGNORECASE
 from subprocess import Popen
 from time import sleep
 from pathlib import Path
+
+from .slurm import SlurmClient
 from .email_preprocess import email_at_to_underscore_and_remove_dot
 from .openbabel_python import smi_xyz
 from .pyrebase_init import user_folder_name
@@ -27,12 +29,23 @@ sbatch_header = f"""#!/bin/bash
 orca_export = """export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export PATH=/usr/local/bin/:$PATH
 export OMP_NUM_THREADS=1"""
+orca_export_list = [
+    "LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH",
+    "PATH=/usr/local/bin/:$PATH",
+    "OMP_NUM_THREADS=1",
+]
 
 gaussian_export = f"""export GAUSS_EXEDIR={GAUSS_EXEDIR}
 export GAUSS_SCRDIR={GAUSS_SCRDIR}"""
+gaussian_export_list = [
+    f"GAUSS_EXEDIR={GAUSS_EXEDIR}",
+    f"GAUSS_SCRDIR={GAUSS_SCRDIR}",
+]
 
 
 def orca_submit(file, email, session):
+    slurmclient = SlurmClient()
+    
     # Upload file
     filename = file.filename
     folder_path = path.join(getcwd(), "user_data")
@@ -43,6 +56,7 @@ def orca_submit(file, email, session):
     except FileExistsError:
         pass
     file.save(path.join(file_folder, filename))
+
     # File content edit
     file_edit = path.join(file_folder, filename)
     new_file = path.join(file_folder, f"{filename[:-4]}_.inp")
@@ -53,10 +67,25 @@ def orca_submit(file, email, session):
             )
             line = sub(r"%maxcore.+", r"%maxcore 2048", line, flags=IGNORECASE)
             f.write(line)
+
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
     orca_cmd = f"{orca_full_path} {file_path}/{filename[:-4]}_.inp > {file_path}/{filename[:-4]}.out --oversubscribe"
     sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
+
+    # # Use Slurm Client
+    # reqData = {
+    #     "akun": email,
+    #     "command": orca_cmd,
+    #     "admin_comment": "",
+    #     "comment": "",
+    #     "cpus_per_task": orca_cpus_per_job,
+    #     "environment": orca_export_list,
+    #     "name": filename[:-4],
+    # }
+
+    # respData = slurmclient.submit_job(reqData)
+    # return respData
 
     # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)
