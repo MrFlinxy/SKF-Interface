@@ -121,7 +121,6 @@ class SlurmClient:
     def list_job_history(self, state, account, name):
         params = {
             "state": state,
-            "account": account,
             "job_name": name,
         }
 
