@@ -124,13 +124,9 @@ class SlurmClient:
     
     # slurmdbd
     def list_job_history(self, isOwnJob=False, state=None, email=None):
-        params = {}
-        if state:
-            params["state"] = state
         response = requests.get(
             f"{self.SLURMDB_URL}/jobs",
             headers=self._headers(),
-            params=params,
         )
 
         response.raise_for_status()
