@@ -178,7 +178,6 @@ class SlurmClient:
 
             filtered_jobs.append({
                 "job_id": job.get("job_id"),
-                "comment": job.get("comment", {}),
                 "job_name": job_name,
                 "user_email": displayed_email,
                 "cpu": job.get("required", {}).get("CPUs"),
