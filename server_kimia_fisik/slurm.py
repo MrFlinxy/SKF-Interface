@@ -180,12 +180,8 @@ class SlurmClient:
                 "job_id": job.get("job_id"),
                 "job_name": job_name,
                 "user_email": displayed_email,
-                "required": {
-                    "CPUs": job.get("required", {}).get("CPUs")
-                },
-                "state": {
-                    "current": job.get("state", {}).get("current", [])
-                },
+                "cpu": job.get("required", {}).get("CPUs"),
+                "state": job.get("state", {}).get("current", ["UNKNOWN"])[0],
                 "submit_time": format_submit_time(
                     job.get("time", {}).get("submission")
                 ),
