@@ -67,21 +67,21 @@ def slurmsubmitjob():
     return resp
 
 
-@main.route("/slurmcanceljob/<job_id>", methods=["DELETE"])
+@main.route("/slurmcanceljob/<job_id>", methods=["GET"])
 def slurmcanceljob(job_id):
     slurmclient = SlurmClient()
 
     resp = slurmclient.cancel_job(job_id)
     return resp
 
-@main.route("/slurmsuspendjob/<job_id>", methods=["POST"])
+@main.route("/slurmsuspendjob/<job_id>", methods=["GET"])
 def slurmsuspendjob(job_id):
     slurmclient = SlurmClient()
     
     resp = slurmclient.suspend_job(job_id)
     return resp
 
-@main.route("/slurmresumejob/<job_id>", methods=["POST"])
+@main.route("/slurmresumejob/<job_id>", methods=["GET"])
 def slurmresumejob(job_id):
     slurmclient = SlurmClient()
 
