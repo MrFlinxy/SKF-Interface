@@ -203,23 +203,20 @@ class SlurmClient:
         return response.json()
 
 def parse_submit_line(submit_line):
-    match = re.search(
-        r'user_data/([^/]+)/([^/]+)/[^/]+\.sh',
+    # Extract email from --comment
+    email_match = re.search(
+        r'--comment="([^"]+)"',
         submit_line
     )
 
-    if not match:
-        return None, None
+    # Extract job name from user_data/<user>/<job_name>/<script>
+    job_match = re.search(
+        r'user_data/[^/]+/([^/]+)/[^/]+\.sh',
+        submit_line
+    )
 
-    user_encoded = match.group(1)
-    job_name = match.group(2)
-
-    # Remove timestamp from the user directory
-    # mdimasn131_gmailcom_1709124396463
-    user_encoded = re.sub(r'_\d+$', '', user_encoded)
-
-    # Convert encoded email
-    email = user_encoded.replace('_', '@')
+    email = email_match.group(1) if email_match else None
+    job_name = job_match.group(1) if job_match else None
 
     return email, job_name
 

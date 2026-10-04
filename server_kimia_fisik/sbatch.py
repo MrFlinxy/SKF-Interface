@@ -100,6 +100,7 @@ def orca_submit(file, email, session):
             "sbatch",
             "--output=/dev/null",
             "--error=/dev/null",
+            f'--comment="{email}"',
             f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
         ]
     )
@@ -258,6 +259,7 @@ END
             "sbatch",
             "--output=/dev/null",
             "--error=/dev/null",
+            f'--comment="{email}"',
             f"user_data/{folder_name}/{calculation_name}/{email_sbatch}***.sh",
         ]
     )
@@ -314,6 +316,7 @@ def gaussian_submit(file, email, session):
             "sbatch",
             "--output=/dev/null",
             "--error=/dev/null",
+            f'--comment="{email}"',
             f"user_data/{folder_name}/{filename[:-4]}/{email_sbatch}***.sh",
         ]
     )
@@ -384,6 +387,7 @@ def gaussian_jsme(
             "sbatch",
             "--output=/dev/null",
             "--error=/dev/null",
+            f'--comment="{email}"',
             f"user_data/{folder_name}/{jsme_nama}/{email_sbatch}***.sh",
         ]
     )
