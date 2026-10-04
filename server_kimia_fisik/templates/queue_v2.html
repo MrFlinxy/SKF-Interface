@@ -128,8 +128,8 @@
             <td class="px-6 py-4 text-center">{{ job["user_email"] }}</td>
 
             <td class="px-6 py-4 text-center">
-              {% if "*" not in job["user_email"] and job["user_email"] != None
-              and job["state"] in ["PENDING", "RUNNING"] %}
+              {% if job["user_email"] and "*" not in job["user_email"] and
+              job["state"] in ["PENDING", "RUNNING"] %}
               <button
                 onclick="cancelJob({{ job['job_id'] }})"
                 class="bg-red-500 text-white px-3 py-1 rounded"
