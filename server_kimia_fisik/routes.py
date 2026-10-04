@@ -385,6 +385,18 @@ def queue_v2_api():
 
     return jsonify(result)
 
+@main.route("/api/queue-v2/<int:job_id>", methods=["DELETE"])
+def cancel_queue_job(job_id):
+
+    if "user" not in session or "akun" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    slurmclient = SlurmClient()
+
+    result = slurmclient.cancel_job(job_id)
+
+    return jsonify(result)
+
 @main.route("/result")
 def result():
     if "user" in session and "akun" in session:

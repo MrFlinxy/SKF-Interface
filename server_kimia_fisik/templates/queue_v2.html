@@ -111,21 +111,33 @@
           </tr>
         </thead>
         <tbody id="jobTableBody">
-          {% for i in queues_len%}
+          {% for job in queues %}
           <tr class="border-b odd:bg-white even:bg-gray-50">
             <th
               scope="row"
               class="whitespace-nowrap px-6 py-4 text-center font-medium text-gray-900"
             >
-              {{ queues[i]["job_id"] }}
+              {{ job["job_id"] }}
             </th>
-            <td class="px-6 py-4 text-center">{{ queues[i]["job_name"]}}</td>
-            <td class="px-6 py-4 text-center">{{ queues[i]["state"]}}</td>
-            <td class="px-6 py-4 text-center">{{ queues[i]["cpu"]}}</td>
-            <td class="px-6 py-4 text-center">{{ queues[i]["submit_time"]}}</td>
-            <td class="px-6 py-4 text-center">{{ queues[i]["elapsed"]}}</td>
-            <td class="px-6 py-4 text-center">{{ queues[i]["user_email"]}}</td>
-            <td class="px-6 py-4 text-center"><button>Menu</button></td>
+
+            <td class="px-6 py-4 text-center">{{ job["job_name"] }}</td>
+            <td class="px-6 py-4 text-center">{{ job["state"] }}</td>
+            <td class="px-6 py-4 text-center">{{ job["cpu"] }}</td>
+            <td class="px-6 py-4 text-center">{{ job["submit_time"] }}</td>
+            <td class="px-6 py-4 text-center">{{ job["elapsed"] }}</td>
+            <td class="px-6 py-4 text-center">{{ job["user_email"] }}</td>
+
+            <td class="px-6 py-4 text-center">
+              {% if "*" not in job["user_email"] and job["user_email"] != None
+              and job["state"] in ["PENDING", "RUNNING"] %}
+              <button
+                onclick="cancelJob({{ job['job_id'] }})"
+                class="bg-red-500 text-white px-3 py-1 rounded"
+              >
+                Cancel
+              </button>
+              {% endif %}
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -248,6 +260,32 @@
 
         jobTableBody.appendChild(row);
       });
+    }
+
+    async function cancelJob(jobId) {
+      if (!confirm(`Batalkan job ${jobId}?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/queue-v2/${jobId}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to cancel job");
+        }
+
+        const result = await response.json();
+
+        console.log(result);
+
+        // Refresh the table
+        await loadJobs();
+      } catch (error) {
+        console.error(error);
+        alert("Gagal membatalkan job.");
+      }
     }
   </script>
 </html>
