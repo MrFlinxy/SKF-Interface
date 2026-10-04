@@ -165,7 +165,7 @@ end
         f.write(orca_inp)
 
     orca_cmd = f"{orca_full_path} user_data/{folder_name}/{jsme_nama}/{jsme_nama}.inp > user_data/{folder_name}/{jsme_nama}/{jsme_nama}.out --oversubscribe"
-    sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n#SBATCH --comment=\"{email}\"\n\n{orca_export}\n\n{orca_cmd}"""
 
     # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)
@@ -239,7 +239,7 @@ END
         folder_path, user_folder_name(email, session), calculation_name
     )
     orca_cmd = f"{orca_full_path} {file_path}/{calculation_name}.inp > {file_path}/{calculation_name}.out --oversubscribe"
-    sbatch_content = f"""{sbatch_header}\n\n{orca_export}\n\n{orca_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n#SBATCH --comment=\"{email}\"\n\n{orca_export}\n\n{orca_cmd}"""
 
     # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)
@@ -297,7 +297,7 @@ def gaussian_submit(file, email, session):
     # Creating sbatch contents
     file_path = path.join(folder_path, user_folder_name(email, session), filename[:-4])
     gaussian_cmd = f"{gaussian_full_path} < {file_path}/{filename[:-4]}_.gjf > {file_path}/{filename[:-4]}.out"
-    sbatch_content = f"""{sbatch_header}\n{gaussian_export}\n\n{gaussian_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n#SBATCH --comment=\"{email}\"\n{gaussian_export}\n\n{gaussian_cmd}"""
 
     # Creating sbatch shell script file
     email_sbatch = email_at_to_underscore_and_remove_dot(email)[0:4]
@@ -366,7 +366,7 @@ def gaussian_jsme(
         f.write(gaussian_gjf)
 
     gaussian_cmd = f"{gaussian_full_path} < user_data/{folder_name}/{jsme_nama}/{jsme_nama}.gjf > user_data/{folder_name}/{jsme_nama}/{jsme_nama}.out"
-    sbatch_content = f"""{sbatch_header}\n{gaussian_export}\n\n{gaussian_cmd}"""
+    sbatch_content = f"""{sbatch_header}\n#SBATCH --comment=\"{email}\"\n{gaussian_export}\n\n{gaussian_cmd}"""
 
     # Creating sbatch shell script file
     folder_name = user_folder_name(email, session)
